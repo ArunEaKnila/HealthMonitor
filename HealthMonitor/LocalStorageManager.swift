@@ -20,6 +20,15 @@ struct StorageManager {
         }
     }
     
+    static var tempToken: String {
+        get {
+            return defaults.string(forKey: "tempToken") ?? ""
+        }
+        set {
+            defaults.set(newValue, forKey: "tempToken")
+        }
+    }
+    
     static var hasRegisteredAPNS: Bool {
         return !deviceToken.isEmpty
     }

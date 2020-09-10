@@ -16,25 +16,24 @@ class ViewController: UIViewController {
     let hkStore = HKHealthStore()
     var stepsObserverQuery: HKObserverQuery?
     let kUserDefaultsAnchorKey = "kUserDefaultsAnchorKey"
+    let timeManager = TimeIntervalManager.shared
+    var intervalsArray: [String]?
 
+    @IBOutlet weak var dayCollectionView: UICollectionView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let center = UNUserNotificationCenter.current()
+        self.intervalsArray = timeManager.getTimeIntervals()
 
         center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
             if granted {
                 print("Yay!")
                 
-                DispatchQueue.main.async {
-                    if !StorageManager.hasRegisteredAPNS {
-                        UIApplication.shared.registerForRemoteNotifications()
-                    }
-                }
-                
                 HealthKitSetupAssistant.authorizeHealthKit { (granted, error) in
                     if granted {
-                        self.startObserving()
+                        //self.startObserving()
                     }
                     else {
                         print(error)
@@ -133,3 +132,45 @@ class ViewController: UIViewController {
     }
 }
 
+extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let intervalCount = intervalsArray?.count {
+            return intervalCount * 2 - 1
+        }
+        
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let identifier = indexPath.row % 2 == 0 ? "timeCell" : "stepCell"
+
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? TimeIntervalCollectionCell {
+            if let interval = intervalsArray?[indexPath.row / 2] {
+                cell.configure(interval)
+            }
+            
+            return cell
+        }
+        else if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? StepIntervalCollectionCell {
+            cell.configure("\(Int.random(in: 50..<500))")
+            
+            return cell
+        }
+        
+        return UICollectionViewCell()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return indexPath.row % 2 == 0 ? CGSize(width: 80, height: 150) : CGSize(width: 50, height: 150)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0.0
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0.0
+    }
+}
