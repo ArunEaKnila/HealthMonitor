@@ -42,11 +42,38 @@ struct TimeIntervalManager {
         return timeIntervals
     }
     
+    func getWakeAndBedTimeAsDate(_ anchorDate: Date) -> (wakeTime: Date, bedTime: Date) {
+        var wakeComponents = calendar.dateComponents([.year, .month, .day], from: anchorDate)
+        let wakeTime = calendar.dateComponents([.hour, .minute], from: self.wakeTime)
+        wakeComponents.hour = wakeTime.hour
+        wakeComponents.minute = wakeTime.minute
+        
+        let wakeDate = calendar.date(from: wakeComponents)
+        
+        let bedTime = calendar.dateComponents([.hour, .minute], from: self.bedTime)
+        wakeComponents.hour = bedTime.hour
+        wakeComponents.minute = bedTime.minute
+        
+        let bedDate = calendar.date(from: wakeComponents)
+        
+        return (wakeDate ?? Date(), bedDate ?? Date())
+    }
+    
     func isDateInRange(_ date: Date) -> Bool {
         let now = Date()
         let addedDate = now.addingTimeInterval(timeInterval)
         
         return date > now && date <= addedDate
+    }
+}
+
+extension TimeInterval {
+    func components() -> DateComponents {
+        let sysCalendar = Calendar.current
+        let date1 = Date()
+        let date2 = Date(timeInterval: self, since: date1)
+        
+        return sysCalendar.dateComponents([.hour, .minute], from: date1, to: date2)
     }
 }
 

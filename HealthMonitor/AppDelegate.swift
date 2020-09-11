@@ -19,7 +19,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print("Did we receive Remote notification \(StorageManager.tempToken)")
         StorageManager.tempToken = ""
         
-        UIApplication.shared.registerForRemoteNotifications()
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+            if granted {
+                print("Yay!")
+
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            } else {
+                print("D'oh")
+            }
+        }
         UNUserNotificationCenter.current().delegate = self
         
         BGTaskScheduler.shared.register(
@@ -91,6 +102,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func applicationDidEnterBackground(_ application: UIApplication) {
         print("applicationDidEnterBackground")
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        print("willPresent")
+        completionHandler(.alert)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("didReceive")
+        completionHandler()
     }
 }
 

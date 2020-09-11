@@ -124,4 +124,39 @@ class StepCountManager {
         
         self.backgroundTask?.setTaskCompleted(success: true)
     }
+    
+    func getStepsForEachHour(_ date: Date, _ completion: @escaping ([String]) -> Void) {
+        guard let stepCountType = HKObjectType.quantityType(forIdentifier: .stepCount) else {
+            fatalError("*** Unable to get the step count type ***")
+        }
+        
+        let calendar = Calendar.current
+        let timeManager = TimeIntervalManager.shared
+        let interval = timeManager.timeInterval.components()
+        let (wakeTime, bedTime) = timeManager.getWakeAndBedTimeAsDate(date)
+        let anchorDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date)
+     
+        let query = HKStatisticsCollectionQuery.init(quantityType: stepCountType,
+                                                     quantitySamplePredicate: nil,
+                                                     options: .cumulativeSum,
+                                                     anchorDate: anchorDate!,
+                                                     intervalComponents: interval)
+        
+        var stepsCount = [String]()
+        
+        query.initialResultsHandler = {
+            query, results, error in
+                 
+            results?.enumerateStatistics(from: wakeTime,
+                                         to: bedTime, with: { (result, stop) in
+                                            stepsCount.append("\(result.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0)")
+                                            
+                                            if result.endDate > bedTime {
+                                                completion(stepsCount)
+                                            }
+                })
+        }
+        
+        hkStore.execute(query)
+    }
 }

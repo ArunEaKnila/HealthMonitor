@@ -34,25 +34,19 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let center = UNUserNotificationCenter.current()
         self.intervalsArray = timeManager.getTimeIntervals()
         
         initializeCharts()
-
-        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+        
+        HealthKitSetupAssistant.authorizeHealthKit { (granted, error) in
             if granted {
-                print("Yay!")
-                
-                HealthKitSetupAssistant.authorizeHealthKit { (granted, error) in
-                    if granted {
-                        //self.startObserving()
-                    }
-                    else {
-                        print(error)
-                    }
+                StepCountManager.shared.getStepsForEachHour(Date()) { (results) in
+                    print(self.intervalsArray?.count)
+                    print(results.count)
                 }
-            } else {
-                print("D'oh")
+            }
+            else {
+                print(error)
             }
         }
     }
