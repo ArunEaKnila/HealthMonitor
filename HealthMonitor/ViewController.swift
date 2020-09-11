@@ -31,29 +31,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var dayCollectionView: UICollectionView!
     
-    private lazy var lineChart: LineChartView = {
-        let lineChart = LineChartView()
-        lineChart.translatesAutoresizingMaskIntoConstraints = false
-        lineChart.delegate = self
-        lineChart.xAxis.granularity = 1
-        lineChart.noDataText = "No Heart Data available, Please allow us to access the heart data"
-        lineChart.xAxis.labelPosition = .bottom
-        lineChart.autoScaleMinMaxEnabled = false
-        lineChart.drawGridBackgroundEnabled = false
-        lineChart.rightAxis.enabled = false
-        lineChart.xAxis.drawGridLinesEnabled = false
-        lineChart.leftAxis.drawGridLinesEnabled = false
-        
-        return lineChart
-    }()
-    
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return scrollView
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -78,22 +55,6 @@ class ViewController: UIViewController {
                 print("D'oh")
             }
         }
-        
-        view.addSubview(scrollView)
-        scrollView.addSubview(lineChart)
-        
-        let guide = self.view.readableContentGuide
-        
-        scrollView.topAnchor.constraint(equalTo: infoStackView.bottomAnchor, constant: 10).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
-        
-        lineChart.topAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-        lineChart.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
-        lineChart.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
-        lineChart.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-        lineChart.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 1).isActive = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -105,7 +66,7 @@ class ViewController: UIViewController {
             let interval = intervalsArray[index]
             let isNow = TimeIntervalManager.shared.isDateInRange(interval.date ?? Date())
             if isNow {
-                todayIndexPath = IndexPath(item: index*2, section: 0)
+                todayIndexPath = IndexPath(item: index*2+1, section: 0)
                 break
             }
         }
@@ -248,9 +209,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
 extension ViewController: ChartViewDelegate {
     private func initializeCharts() {
         guard let intervalsArray = intervalsArray else { return }
-        
-        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: intervalsArray)
-        
+                
         self.heartRateView.delegate = self
         self.heartRateView.xAxis.valueFormatter = IndexAxisValueFormatter(values: intervalsArray)
         self.heartRateView.xAxis.granularity = 1
