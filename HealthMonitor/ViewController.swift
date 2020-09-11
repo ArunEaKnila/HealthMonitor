@@ -9,6 +9,7 @@
 import UIKit
 import HealthKit
 import UserNotifications
+import Charts
 
 class ViewController: UIViewController {
     
@@ -18,14 +19,48 @@ class ViewController: UIViewController {
     let kUserDefaultsAnchorKey = "kUserDefaultsAnchorKey"
     let timeManager = TimeIntervalManager.shared
     var intervalsArray: [String]?
+    var todayIndexPath: IndexPath? {
+        didSet {
+            if let indexPath = todayIndexPath {
+                dayCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            }
+        }
+    }
 
+    @IBOutlet weak var heartRateView: LineChartView!
+    @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var dayCollectionView: UICollectionView!
+    
+    private lazy var lineChart: LineChartView = {
+        let lineChart = LineChartView()
+        lineChart.translatesAutoresizingMaskIntoConstraints = false
+        lineChart.delegate = self
+        lineChart.xAxis.granularity = 1
+        lineChart.noDataText = "No Heart Data available, Please allow us to access the heart data"
+        lineChart.xAxis.labelPosition = .bottom
+        lineChart.autoScaleMinMaxEnabled = false
+        lineChart.drawGridBackgroundEnabled = false
+        lineChart.rightAxis.enabled = false
+        lineChart.xAxis.drawGridLinesEnabled = false
+        lineChart.leftAxis.drawGridLinesEnabled = false
+        
+        return lineChart
+    }()
+    
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return scrollView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let center = UNUserNotificationCenter.current()
         self.intervalsArray = timeManager.getTimeIntervals()
+        
+        initializeCharts()
 
         center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
             if granted {
@@ -41,6 +76,37 @@ class ViewController: UIViewController {
                 }
             } else {
                 print("D'oh")
+            }
+        }
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(lineChart)
+        
+        let guide = self.view.readableContentGuide
+        
+        scrollView.topAnchor.constraint(equalTo: infoStackView.bottomAnchor, constant: 10).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
+        
+        lineChart.topAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        lineChart.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
+        lineChart.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
+        lineChart.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        lineChart.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 1).isActive = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        guard let intervalsArray = intervalsArray else { return }
+        
+        for index in 0..<intervalsArray.count {
+            let interval = intervalsArray[index]
+            let isNow = TimeIntervalManager.shared.isDateInRange(interval.date ?? Date())
+            if isNow {
+                todayIndexPath = IndexPath(item: index*2, section: 0)
+                break
             }
         }
     }
@@ -152,7 +218,10 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             return cell
         }
         else if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? StepIntervalCollectionCell {
-            cell.configure("\(Int.random(in: 50..<500))")
+            if let interval = intervalsArray?[indexPath.row / 2], let date = interval.date {
+                let isNow = TimeIntervalManager.shared.isDateInRange(date)
+                cell.configure("\(Int.random(in: 0..<200))", isToday: isNow)
+            }
             
             return cell
         }
@@ -174,3 +243,57 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         return 0.0
     }
 }
+
+// MARK: Charts
+extension ViewController: ChartViewDelegate {
+    private func initializeCharts() {
+        guard let intervalsArray = intervalsArray else { return }
+        
+        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: intervalsArray)
+        
+        self.heartRateView.delegate = self
+        self.heartRateView.xAxis.valueFormatter = IndexAxisValueFormatter(values: intervalsArray)
+        self.heartRateView.xAxis.granularity = 1
+        self.heartRateView.noDataText = "No Heart Data available, Please allow us to access the heart data"
+        self.heartRateView.xAxis.labelPosition = .bottom
+        self.heartRateView.autoScaleMinMaxEnabled = false
+        self.heartRateView.drawGridBackgroundEnabled = false
+        self.heartRateView.rightAxis.enabled = false
+        self.heartRateView.xAxis.drawGridLinesEnabled = false
+        self.heartRateView.leftAxis.drawGridLinesEnabled = false
+        
+        var heartRateEntries = [ChartDataEntry]()
+        for interval in 0..<intervalsArray.count {
+            let value = ChartDataEntry(x: Double(interval), y: Double.random(in: 60...80))
+            heartRateEntries.append(value)
+        }
+        
+        let line1 = LineChartDataSet(entries: heartRateEntries, label: "Heart Rate")
+        line1.drawCircleHoleEnabled = false
+        line1.drawCirclesEnabled = false
+        line1.drawValuesEnabled = false
+        line1.colors = [.red]
+        
+        var stepEntries = [ChartDataEntry]()
+        for interval in 0..<intervalsArray.count {
+            let value = ChartDataEntry(x: Double(interval), y: Double.random(in: 0...200))
+            stepEntries.append(value)
+        }
+        
+        let line2 = LineChartDataSet(entries: stepEntries, label: "Steps")
+        line2.circleRadius = 3
+        line2.circleColors = [.systemTeal]
+        line2.drawCircleHoleEnabled = false
+        line2.colors = [.systemTeal]
+        
+        let data = LineChartData()
+        data.addDataSet(line1)
+        data.addDataSet(line2)
+        heartRateView.data = data
+    }
+    
+    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
+        print("Selected")
+    }
+}
+
