@@ -10,6 +10,7 @@ import UIKit
 import HealthKit
 import UserNotifications
 import Charts
+import FSCalendar
 
 class ViewController: UIViewController {
     
@@ -30,6 +31,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var heartRateView: LineChartView!
     @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var dayCollectionView: UICollectionView!
+    @IBOutlet weak var calendarHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var calendarView: FSCalendar!
+    @IBOutlet weak var totalStepsLabel: UILabel!
+    @IBOutlet weak var heartRateLabel: UILabel!
+    @IBOutlet weak var totalDistLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,24 +45,9 @@ class ViewController: UIViewController {
             return StepsModel(intervalStartTime: $0, stepsCount: 0)
         })
         
+        initializeCalendar()
         initializeCharts()
-        
-        HealthKitSetupAssistant.authorizeHealthKit { (granted, error) in
-            if granted {
-                StepCountManager.shared.getStepsForEachHour(Date()) { (results) in
-                    for index in 0..<self.intervalsArray.count {
-                        let stepsModel = self.intervalsArray[index]
-                        stepsModel.stepsCount = Int(Double(results[index]) ?? 0)
-                        
-                        print("Steps after \(stepsModel.intervalStartTime) is \(stepsModel.stepsCount) steps")
-                    }
-                }
-            }
-            else {
-                // TODO: Handle it!!
-                print("Error authorizing health kit")
-            }
-        }
+        refreshHealthKitData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -74,89 +65,29 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBAction func showNotification(_ sender: Any) {
-        self.scheduleNotification()
-    }
-    
-    func startObserving() {
-        print("startObserving")
-        stepsObserverQuery = HKObserverQuery(
-            sampleType: stepsType,
-            predicate: nil) { [weak self] (query, completion, error) in
-                self?.stepsObserverQueryTriggered()
-        }
-
-        hkStore.execute(stepsObserverQuery!)
-        hkStore.enableBackgroundDelivery(for: stepsType, frequency: .immediate) { (granted, error) in
+    private func refreshHealthKitData() {
+        HealthKitSetupAssistant.authorizeHealthKit { [unowned self] (granted, error) in
             if granted {
-                print("BG notifications enabled")
+                StepCountManager.shared.getStepsForEachHour(self.calendarView.selectedDate ?? Date()) { (results) in
+                    for index in 0..<self.intervalsArray.count {
+                        let stepsModel = self.intervalsArray[index]
+                        stepsModel.stepsCount = Int(Double(results[index]) ?? 0)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        let totalSteps = self.intervalsArray.reduce(0, { (subTotal, model) -> Int in
+                            return subTotal + (model.stepsCount ?? 0)
+                        })
+                        self.totalStepsLabel.text = String(totalSteps)
+                        self.dayCollectionView.reloadData()
+                        self.refreshChartsData()
+                    }
+                }
             }
-        }
-    }
-    
-    func stepsObserverQueryTriggered() {
-        print("stepsObserverQueryTriggered")
-        let oneHourAgo = Date().addingTimeInterval(-(60*60))
-        let lastHourPredicate = NSPredicate(format: "endDate > %@", oneHourAgo as NSDate)
-        
-        let stepsSampleQuery = HKSampleQuery(
-                sampleType: stepsType,
-                predicate: lastHourPredicate,
-                limit: HKObjectQueryNoLimit,
-                sortDescriptors: nil,
-                resultsHandler: { [weak self] (query, samples, error) in
-                    self?.stepsSampleQueryFinished(samples: samples)
-            })
-        hkStore.execute(stepsSampleQuery)
-    }
-
-    func stepsSampleQueryFinished(samples: [HKSample]?) {
-        
-        samples?.forEach({ (sample) in
-            guard let sample = sample as? HKQuantitySample else {
-                return
+            else {
+                // TODO: Handle it!!
+                print("Error authorizing health kit")
             }
-            
-            print("SAMPLE DETAILS \(sample.quantity) \(sample.sampleType) at \(sample.endDate)")
-        })
-        
-        print("stepsSampleQueryFinished")
-        scheduleNotification()
-    }
-    
-    func storeAnchor(anchor: HKQueryAnchor?) {
-        guard let anchor = anchor else { return }
-        do {
-            let data = try NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
-            UserDefaults.standard.set(data, forKey: kUserDefaultsAnchorKey)
-        } catch {
-            print("Unable to store new anchor")
-        }
-    }
-
-    func retrieveAnchor() -> HKQueryAnchor? {
-        guard let data = UserDefaults.standard.data(forKey: kUserDefaultsAnchorKey) else { return nil }
-        do {
-            return try NSKeyedUnarchiver.unarchivedObject(ofClass: HKQueryAnchor.self, from: data)
-        } catch {
-            print("Unable to retrieve an anchor")
-            return nil
-        }
-    }
-    
-    func scheduleNotification() {
-        let content = UNMutableNotificationContent()
-
-        content.title = "Title"
-        content.body = "body"
-        content.categoryIdentifier = "CALLINNOTIFICATION"
-        let trigger = UNTimeIntervalNotificationTrigger.init(timeInterval: 10, repeats: false)
-        let identifier = "id_Title"
-        let request = UNNotificationRequest.init(identifier: identifier, content: content, trigger: trigger)
-
-        let center = UNUserNotificationCenter.current()
-        center.add(request) { (error) in
-            print("Error in scheduling noti ", error?.localizedDescription ?? "")
         }
     }
 }
@@ -182,7 +113,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         else if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? StepIntervalCollectionCell {
             let stepsModel = intervalsArray[indexPath.row / 2]
             if let interval = stepsModel.intervalStartTime, let date = interval.date {
-                let isNow = TimeIntervalManager.shared.isDateInRange(date)
+                let isNow = Calendar.current.isDateInToday(calendarView.selectedDate ?? Date()) && TimeIntervalManager.shared.isDateInRange(date)
                 cell.configure("\(stepsModel.stepsCount ?? 0)", isToday: isNow)
             }
             
@@ -210,11 +141,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
 // MARK: Charts
 extension ViewController: ChartViewDelegate {
     private func initializeCharts() {
-        if intervalsArray.isEmpty { return }
-        
-        let allIntervals = intervalsArray.map({ return $0.intervalStartTime ?? "Time" })
         self.heartRateView.delegate = self
-        self.heartRateView.xAxis.valueFormatter = IndexAxisValueFormatter(values: allIntervals)
         self.heartRateView.xAxis.granularity = 1
         self.heartRateView.noDataText = "No Heart Data available, Please allow us to access the heart data"
         self.heartRateView.xAxis.labelPosition = .bottom
@@ -223,6 +150,12 @@ extension ViewController: ChartViewDelegate {
         self.heartRateView.rightAxis.enabled = false
         self.heartRateView.xAxis.drawGridLinesEnabled = false
         self.heartRateView.leftAxis.drawGridLinesEnabled = false
+    }
+    private func refreshChartsData() {
+        if intervalsArray.isEmpty { return }
+        
+        let allIntervals = intervalsArray.map({ return $0.intervalStartTime ?? "Time" })
+        self.heartRateView.xAxis.valueFormatter = IndexAxisValueFormatter(values: allIntervals)
         
         var heartRateEntries = [ChartDataEntry]()
         for index in 0..<intervalsArray.count {
@@ -255,9 +188,30 @@ extension ViewController: ChartViewDelegate {
         data.addDataSet(line2)
         heartRateView.data = data
     }
+}
+
+extension ViewController: FSCalendarDataSource, FSCalendarDelegate {
+    func initializeCalendar() {
+        self.calendarView.setScope(.week, animated: false)
+    }
     
-    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
-        print("Selected")
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        refreshHealthKitData()
+    }
+    
+    func maximumDate(for calendar: FSCalendar) -> Date {
+        return Date()
+    }
+    
+    func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
+        calendarHeightConstraint.constant = bounds.size.height
+        view.layoutIfNeeded()
+        view.setNeedsLayout()
+    }
+    
+    func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
+        calendarView.select(calendar.currentPage, scrollToDate: false)
+        refreshHealthKitData()
     }
 }
 

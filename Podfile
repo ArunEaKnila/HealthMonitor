@@ -7,5 +7,6 @@ target 'HealthMonitor' do
 
   # Pods for HealthMonitor
   pod 'Charts'
+  pod 'FSCalendar'
 
 end

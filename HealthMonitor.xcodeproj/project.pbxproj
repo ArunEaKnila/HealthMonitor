@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,7 @@
 		184C1E93250106FA0007B49E /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 184C1E92250106FA0007B49E /* HealthKit.framework */; };
 		184C1E95250107A10007B49E /* HealthKitSetupAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */; };
 		184C1E9825060FA20007B49E /* StepCountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E9725060FA20007B49E /* StepCountManager.swift */; };
+		1857D3F7250F56DD007559C8 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857D3F6250F56DD007559C8 /* SpinnerView.swift */; };
 		1895C5F8250784940021FA35 /* LocalStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1895C5F7250784940021FA35 /* LocalStorageManager.swift */; };
 		18CAC94B250A15A500B1EEF1 /* TimeIntervalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */; };
 		3458526BF7EF2B7FF19A5C0D /* Pods_HealthMonitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768A5110329AE585CB690FDD /* Pods_HealthMonitor.framework */; };
@@ -36,6 +37,7 @@
 		184C1E92250106FA0007B49E /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupAssistant.swift; sourceTree = "<group>"; };
 		184C1E9725060FA20007B49E /* StepCountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCountManager.swift; sourceTree = "<group>"; };
+		1857D3F6250F56DD007559C8 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		1895C5F7250784940021FA35 /* LocalStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorageManager.swift; sourceTree = "<group>"; };
 		18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalManager.swift; sourceTree = "<group>"; };
 		2C6CA3ABF81B5202FD2D12C6 /* Pods-HealthMonitor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthMonitor.release.xcconfig"; path = "Target Support Files/Pods-HealthMonitor/Pods-HealthMonitor.release.xcconfig"; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				1895C5F7250784940021FA35 /* LocalStorageManager.swift */,
 				18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */,
 				1811C1B8250A1AE800DBF42E /* CollectionViewCells */,
+				1857D3F5250F569B007559C8 /* CustomView */,
 			);
 			path = HealthMonitor;
 			sourceTree = "<group>";
@@ -111,13 +114,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		1857D3F5250F569B007559C8 /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				1857D3F6250F56DD007559C8 /* SpinnerView.swift */,
+			);
+			path = CustomView;
+			sourceTree = "<group>";
+		};
 		24F8C062A0D134E8B0E054E8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
 				3695992EF61CBF917489CF7A /* Pods-HealthMonitor.debug.xcconfig */,
 				2C6CA3ABF81B5202FD2D12C6 /* Pods-HealthMonitor.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -151,7 +161,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1160;
 				LastUpgradeCheck = 1160;
-				ORGANIZATIONNAME = knila;
+				ORGANIZATIONNAME = "Knila IT Solutions";
 				TargetAttributes = {
 					184C1E77250100B20007B49E = {
 						CreatedOnToolsVersion = 11.6;
@@ -237,6 +247,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1811C1BA250A1B3600DBF42E /* StepIntervalCollectionCell.swift in Sources */,
+				1857D3F7250F56DD007559C8 /* SpinnerView.swift in Sources */,
 				184C1E9825060FA20007B49E /* StepCountManager.swift in Sources */,
 				184C1E80250100B20007B49E /* ViewController.swift in Sources */,
 				184C1E95250107A10007B49E /* HealthKitSetupAssistant.swift in Sources */,
