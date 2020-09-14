@@ -11,8 +11,8 @@ import HealthKit
 import BackgroundTasks
 import UserNotifications
 
-class StepCountManager {
-    static let shared = StepCountManager()
+class HealthKitDataFetcher {
+    static let shared = HealthKitDataFetcher()
     
     private init() {}
     
@@ -20,8 +20,9 @@ class StepCountManager {
     private let hkStore = HKHealthStore()
     private let timeIntervalToCheck: TimeInterval = 60 * 60
     private let stepsType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+    private let timeManager = TimeIntervalManager.shared
     private var stepsCompletion: (([HKSample]?) -> ())?
-    
+        
     var backgroundTask: BGAppRefreshTask?
     
     var lastCheckedTime: Date {
@@ -131,7 +132,6 @@ class StepCountManager {
         }
         
         let calendar = Calendar.current
-        let timeManager = TimeIntervalManager.shared
         let interval = timeManager.timeInterval.components()
         let (wakeTime, bedTime) = timeManager.getWakeAndBedTimeAsDate(date)
         let anchorDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date)
@@ -155,6 +155,66 @@ class StepCountManager {
                                                 completion(stepsCount)
                                             }
                 })
+        }
+        
+        hkStore.execute(query)
+    }
+    
+    func getHeartRateForEachHour(_ date: Date, _ completion: @escaping ([Int]) -> Void) {
+        guard let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate) else {
+            fatalError("*** Unable to get the heart rate count type ***")
+        }
+        
+        let calendar = Calendar.current
+        let interval = timeManager.timeInterval.components()
+        let (wakeTime, bedTime) = timeManager.getWakeAndBedTimeAsDate(date)
+        let anchorDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date)
+     
+        let query = HKStatisticsCollectionQuery.init(quantityType: heartRateType,
+                                                     quantitySamplePredicate: nil,
+                                                     options: .discreteAverage,
+                                                     anchorDate: anchorDate!,
+                                                     intervalComponents: interval)
+        
+        var heartRateCount = [Int]()
+        
+        query.initialResultsHandler = {
+            query, results, error in
+                 
+            results?.enumerateStatistics(from: wakeTime,
+                                         to: bedTime, with: { (result, stop) in
+                                            let beats: Double = result.averageQuantity()?.doubleValue(for: HKUnit.count().unitDivided(by: HKUnit.minute())) ?? 0
+                                            heartRateCount.append(Int(beats))
+                                            
+                                            if result.endDate > bedTime {
+                                                completion(heartRateCount)
+                                            }
+                })
+        }
+        
+        hkStore.execute(query)
+    }
+    
+    func getFullDistance(_ date: Date, _ completion: @escaping (Double) -> Void) {
+        guard let type = HKSampleType.quantityType(forIdentifier: .distanceWalkingRunning) else {
+            fatalError("*** Unable to get the walking / running type ***")
+        }
+        let (wakeTime, bedTime) = timeManager.getWakeAndBedTimeAsDate(date)
+
+        let predicate = HKQuery.predicateForSamples(withStart: wakeTime, end: bedTime, options: .strictStartDate)
+
+        let query = HKStatisticsQuery(quantityType: type, quantitySamplePredicate: predicate, options: [.cumulativeSum]) { (query, statistics, error) in
+            var value: Double = 0
+
+            if error != nil {
+                print("HealthKit error \(error.debugDescription)")
+            } else if let quantity = statistics?.sumQuantity() {
+                value = quantity.doubleValue(for: HKUnit.mile())
+            }
+            
+            DispatchQueue.main.async {
+                completion(value)
+            }
         }
         
         hkStore.execute(query)

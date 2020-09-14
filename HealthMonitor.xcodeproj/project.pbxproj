@@ -16,7 +16,7 @@
 		184C1E88250100BB0007B49E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 184C1E86250100BB0007B49E /* LaunchScreen.storyboard */; };
 		184C1E93250106FA0007B49E /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 184C1E92250106FA0007B49E /* HealthKit.framework */; };
 		184C1E95250107A10007B49E /* HealthKitSetupAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */; };
-		184C1E9825060FA20007B49E /* StepCountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E9725060FA20007B49E /* StepCountManager.swift */; };
+		184C1E9825060FA20007B49E /* HealthKitDataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */; };
 		1857D3F7250F56DD007559C8 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857D3F6250F56DD007559C8 /* SpinnerView.swift */; };
 		1895C5F8250784940021FA35 /* LocalStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1895C5F7250784940021FA35 /* LocalStorageManager.swift */; };
 		18CAC94B250A15A500B1EEF1 /* TimeIntervalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */; };
@@ -36,7 +36,7 @@
 		184C1E90250106FA0007B49E /* HealthMonitor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthMonitor.entitlements; sourceTree = "<group>"; };
 		184C1E92250106FA0007B49E /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupAssistant.swift; sourceTree = "<group>"; };
-		184C1E9725060FA20007B49E /* StepCountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCountManager.swift; sourceTree = "<group>"; };
+		184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitDataFetcher.swift; sourceTree = "<group>"; };
 		1857D3F6250F56DD007559C8 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		1895C5F7250784940021FA35 /* LocalStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorageManager.swift; sourceTree = "<group>"; };
 		18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalManager.swift; sourceTree = "<group>"; };
@@ -92,7 +92,7 @@
 				184C1E7B250100B20007B49E /* AppDelegate.swift */,
 				184C1E7F250100B20007B49E /* ViewController.swift */,
 				184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */,
-				184C1E9725060FA20007B49E /* StepCountManager.swift */,
+				184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */,
 				184C1E81250100B20007B49E /* Main.storyboard */,
 				184C1E84250100BB0007B49E /* Assets.xcassets */,
 				184C1E86250100BB0007B49E /* LaunchScreen.storyboard */,
@@ -248,7 +248,7 @@
 			files = (
 				1811C1BA250A1B3600DBF42E /* StepIntervalCollectionCell.swift in Sources */,
 				1857D3F7250F56DD007559C8 /* SpinnerView.swift in Sources */,
-				184C1E9825060FA20007B49E /* StepCountManager.swift in Sources */,
+				184C1E9825060FA20007B49E /* HealthKitDataFetcher.swift in Sources */,
 				184C1E80250100B20007B49E /* ViewController.swift in Sources */,
 				184C1E95250107A10007B49E /* HealthKitSetupAssistant.swift in Sources */,
 				1895C5F8250784940021FA35 /* LocalStorageManager.swift in Sources */,

@@ -30,6 +30,8 @@
 	<string>We will share your health data with other apps for better health accuracy</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
+		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

@@ -46,8 +46,10 @@ class HealthKitSetupAssistant {
         }
         
         //2. Prepare the data types that will interact with HealthKit
-        guard let stepCount = HKObjectType.quantityType(forIdentifier: .stepCount) else {
-            
+        guard let stepCount = HKObjectType.quantityType(forIdentifier: .stepCount),
+            let heartRate = HKObjectType.quantityType(forIdentifier: .heartRate),
+            let walkingDistance = HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)
+        else {
             completion(false, HealthkitSetupError.dataTypeNotAvailable)
             return
         }
@@ -55,20 +57,12 @@ class HealthKitSetupAssistant {
         //3. Prepare a list of types you want HealthKit to read and write
         //let healthKitTypesToWrite: Set<HKSampleType> = [bodyMassIndex, activeEnergy, HKObjectType.workoutType()]
         
-        let healthKitTypesToRead: Set<HKObjectType> = [stepCount]
+        let healthKitTypesToRead: Set<HKObjectType> = [stepCount, heartRate, walkingDistance]
         
         //4. Request Authorization
         HKHealthStore().requestAuthorization(toShare: nil,
                                              read: healthKitTypesToRead) { (success, error) in
                                                 completion(success, error)
         }
-    }
-    
-    class var isGranted: Bool {
-        guard let stepCount = HKObjectType.quantityType(forIdentifier: .stepCount) else {
-            return false
-        }
-        
-        return HKHealthStore().authorizationStatus(for: stepCount) == .sharingAuthorized
     }
 }

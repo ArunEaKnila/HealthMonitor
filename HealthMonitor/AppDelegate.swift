@@ -33,16 +33,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         UNUserNotificationCenter.current().delegate = self
         
-        BGTaskScheduler.shared.register(
-            forTaskWithIdentifier: "com.knila.HealthMonitor.checkSteps",
-            using: DispatchQueue.global()
-        ) { (task) in
-            //self.handleAppRefresh(task)
-        }
+        authorizeHealthKit()
         
         return true
     }
     
+    private func authorizeHealthKit() {
+        HealthKitSetupAssistant.authorizeHealthKit {(granted, error) in
+            if granted {
+                // Continue with current execution
+            } else {
+                // TODO: Handle it!!
+                print("Error authorizing health kit")
+            }
+        }
+    }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         // 1. Convert device token to string
@@ -78,7 +83,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
           return
         }
         
-        StepCountManager.shared.getSteps { (samples) in
+        HealthKitDataFetcher.shared.getSteps { (samples) in
             guard let samples = samples, !samples.isEmpty else {
                 completionHandler(.noData)
                 return
@@ -93,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             task.setTaskCompleted(success: false)
         }
 
-        StepCountManager.shared.getStepsFromLastChecked(task)
+        HealthKitDataFetcher.shared.getStepsFromLastChecked(task)
     }
     
     func applicationWillResignActive(_ application: UIApplication) {

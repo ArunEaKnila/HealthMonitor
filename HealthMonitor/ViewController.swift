@@ -42,7 +42,7 @@ class ViewController: UIViewController {
         
         let allIntervals = timeManager.getTimeIntervals()
         self.intervalsArray = allIntervals.map({
-            return StepsModel(intervalStartTime: $0, stepsCount: 0)
+            return StepsModel(intervalStartTime: $0, stepsCount: 0, heartRate: 0)
         })
         
         initializeCalendar()
@@ -64,34 +64,61 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+}
+
+// MARK: Health Kit
+extension ViewController {
     private func refreshHealthKitData() {
-        HealthKitSetupAssistant.authorizeHealthKit { [unowned self] (granted, error) in
-            if granted {
-                StepCountManager.shared.getStepsForEachHour(self.calendarView.selectedDate ?? Date()) { (results) in
-                    for index in 0..<self.intervalsArray.count {
-                        let stepsModel = self.intervalsArray[index]
-                        stepsModel.stepsCount = Int(Double(results[index]) ?? 0)
-                    }
-                    
-                    DispatchQueue.main.async {
-                        let totalSteps = self.intervalsArray.reduce(0, { (subTotal, model) -> Int in
-                            return subTotal + (model.stepsCount ?? 0)
-                        })
-                        self.totalStepsLabel.text = String(totalSteps)
-                        self.dayCollectionView.reloadData()
-                        self.refreshChartsData()
-                    }
-                }
+        HealthKitDataFetcher.shared.getStepsForEachHour(self.calendarView.selectedDate ?? Date()) { (results) in
+            for index in 0..<self.intervalsArray.count {
+                let stepsModel = self.intervalsArray[index]
+                stepsModel.stepsCount = Int(Double(results[index]) ?? 0)
             }
-            else {
-                // TODO: Handle it!!
-                print("Error authorizing health kit")
+            
+            DispatchQueue.main.async {
+                let totalSteps = self.intervalsArray.reduce(0, { (subTotal, model) -> Int in
+                    return subTotal + (model.stepsCount ?? 0)
+                })
+                self.totalStepsLabel.text = String(totalSteps)
+                self.dayCollectionView.reloadData()
+                self.refreshChartsData()
+            }
+        }
+        
+        HealthKitDataFetcher.shared.getHeartRateForEachHour(self.calendarView.selectedDate ?? Date()) { (results) in
+            for index in 0..<self.intervalsArray.count {
+                let stepsModel = self.intervalsArray[index]
+                stepsModel.heartRate = results[index]
+            }
+            
+            DispatchQueue.main.async {
+                self.heartRateLabel.text = String(self.averageHeartRate())
+                self.refreshChartsData()
+            }
+        }
+        
+        HealthKitDataFetcher.shared.getFullDistance(self.calendarView.selectedDate ?? Date()) { (totalDistance) in
+            DispatchQueue.main.async {
+                self.totalDistLabel.text = String(format: "%.2f", totalDistance)
             }
         }
     }
+    
+    private func averageHeartRate() -> Int {
+        var numberOfRates = 0
+        var totalRate = 0
+        for stepsModel in intervalsArray {
+            if let heartRate = stepsModel.heartRate, heartRate > 0 {
+                totalRate += heartRate
+                numberOfRates += 1
+            }
+        }
+        
+        return numberOfRates > 0 ? totalRate / numberOfRates : 0
+    }
 }
 
+// MARK: Day Collection View
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if !intervalsArray.isEmpty {
@@ -138,7 +165,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     }
 }
 
-// MARK: Charts
+// MARK: Charts - Heart Rate
 extension ViewController: ChartViewDelegate {
     private func initializeCharts() {
         self.heartRateView.delegate = self
@@ -159,9 +186,11 @@ extension ViewController: ChartViewDelegate {
         
         var heartRateEntries = [ChartDataEntry]()
         for index in 0..<intervalsArray.count {
-            let stepsCount = Double(intervalsArray[index].stepsCount ?? 0)
-            let value = ChartDataEntry(x: Double(index), y: stepsCount)
-            heartRateEntries.append(value)
+            let heartRate = Double(intervalsArray[index].heartRate ?? 0)
+            if heartRate > 0 {
+                let value = ChartDataEntry(x: Double(index), y: heartRate)
+                heartRateEntries.append(value)
+            }
         }
         
         let line1 = LineChartDataSet(entries: heartRateEntries, label: "Heart Rate")
@@ -190,6 +219,7 @@ extension ViewController: ChartViewDelegate {
     }
 }
 
+// MARK: Calendar
 extension ViewController: FSCalendarDataSource, FSCalendarDelegate {
     func initializeCalendar() {
         self.calendarView.setScope(.week, animated: false)
@@ -216,11 +246,13 @@ extension ViewController: FSCalendarDataSource, FSCalendarDelegate {
 }
 
 class StepsModel {
-    internal init(intervalStartTime: String? = nil, stepsCount: Int? = nil) {
+    internal init(intervalStartTime: String? = nil, stepsCount: Int? = nil, heartRate: Int? = nil) {
         self.intervalStartTime = intervalStartTime
         self.stepsCount = stepsCount
+        self.heartRate = heartRate
     }
     
     var intervalStartTime: String?
     var stepsCount: Int?
+    var heartRate: Int?
 }
