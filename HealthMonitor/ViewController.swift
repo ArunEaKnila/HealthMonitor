@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     var stepsObserverQuery: HKObserverQuery?
     let kUserDefaultsAnchorKey = "kUserDefaultsAnchorKey"
     let timeManager = TimeIntervalManager.shared
-    var intervalsArray: [String]?
+    var intervalsArray = [StepsModel]()
     var todayIndexPath: IndexPath? {
         didSet {
             if let indexPath = todayIndexPath {
@@ -34,19 +34,27 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.intervalsArray = timeManager.getTimeIntervals()
+        let allIntervals = timeManager.getTimeIntervals()
+        self.intervalsArray = allIntervals.map({
+            return StepsModel(intervalStartTime: $0, stepsCount: 0)
+        })
         
         initializeCharts()
         
         HealthKitSetupAssistant.authorizeHealthKit { (granted, error) in
             if granted {
                 StepCountManager.shared.getStepsForEachHour(Date()) { (results) in
-                    print(self.intervalsArray?.count)
-                    print(results.count)
+                    for index in 0..<self.intervalsArray.count {
+                        let stepsModel = self.intervalsArray[index]
+                        stepsModel.stepsCount = Int(Double(results[index]) ?? 0)
+                        
+                        print("Steps after \(stepsModel.intervalStartTime) is \(stepsModel.stepsCount) steps")
+                    }
                 }
             }
             else {
-                print(error)
+                // TODO: Handle it!!
+                print("Error authorizing health kit")
             }
         }
     }
@@ -54,11 +62,11 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        guard let intervalsArray = intervalsArray else { return }
+        if intervalsArray.isEmpty { return }
         
         for index in 0..<intervalsArray.count {
-            let interval = intervalsArray[index]
-            let isNow = TimeIntervalManager.shared.isDateInRange(interval.date ?? Date())
+            let stepsModel = intervalsArray[index]
+            let isNow = TimeIntervalManager.shared.isDateInRange(stepsModel.intervalStartTime?.date ?? Date())
             if isNow {
                 todayIndexPath = IndexPath(item: index*2+1, section: 0)
                 break
@@ -155,8 +163,8 @@ class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let intervalCount = intervalsArray?.count {
-            return intervalCount * 2 - 1
+        if !intervalsArray.isEmpty {
+            return intervalsArray.count * 2 - 1
         }
         
         return 0
@@ -166,16 +174,16 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         let identifier = indexPath.row % 2 == 0 ? "timeCell" : "stepCell"
 
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? TimeIntervalCollectionCell {
-            if let interval = intervalsArray?[indexPath.row / 2] {
-                cell.configure(interval)
-            }
+            let stepsModel = intervalsArray[indexPath.row / 2]
+            cell.configure(stepsModel.intervalStartTime ?? "Time")
             
             return cell
         }
         else if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? StepIntervalCollectionCell {
-            if let interval = intervalsArray?[indexPath.row / 2], let date = interval.date {
+            let stepsModel = intervalsArray[indexPath.row / 2]
+            if let interval = stepsModel.intervalStartTime, let date = interval.date {
                 let isNow = TimeIntervalManager.shared.isDateInRange(date)
-                cell.configure("\(Int.random(in: 0..<200))", isToday: isNow)
+                cell.configure("\(stepsModel.stepsCount ?? 0)", isToday: isNow)
             }
             
             return cell
@@ -202,10 +210,11 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
 // MARK: Charts
 extension ViewController: ChartViewDelegate {
     private func initializeCharts() {
-        guard let intervalsArray = intervalsArray else { return }
-                
+        if intervalsArray.isEmpty { return }
+        
+        let allIntervals = intervalsArray.map({ return $0.intervalStartTime ?? "Time" })
         self.heartRateView.delegate = self
-        self.heartRateView.xAxis.valueFormatter = IndexAxisValueFormatter(values: intervalsArray)
+        self.heartRateView.xAxis.valueFormatter = IndexAxisValueFormatter(values: allIntervals)
         self.heartRateView.xAxis.granularity = 1
         self.heartRateView.noDataText = "No Heart Data available, Please allow us to access the heart data"
         self.heartRateView.xAxis.labelPosition = .bottom
@@ -216,8 +225,9 @@ extension ViewController: ChartViewDelegate {
         self.heartRateView.leftAxis.drawGridLinesEnabled = false
         
         var heartRateEntries = [ChartDataEntry]()
-        for interval in 0..<intervalsArray.count {
-            let value = ChartDataEntry(x: Double(interval), y: Double.random(in: 60...80))
+        for index in 0..<intervalsArray.count {
+            let stepsCount = Double(intervalsArray[index].stepsCount ?? 0)
+            let value = ChartDataEntry(x: Double(index), y: stepsCount)
             heartRateEntries.append(value)
         }
         
@@ -228,8 +238,9 @@ extension ViewController: ChartViewDelegate {
         line1.colors = [.red]
         
         var stepEntries = [ChartDataEntry]()
-        for interval in 0..<intervalsArray.count {
-            let value = ChartDataEntry(x: Double(interval), y: Double.random(in: 0...200))
+        for index in 0..<intervalsArray.count {
+            let stepsCount = Double(intervalsArray[index].stepsCount ?? 0)
+            let value = ChartDataEntry(x: Double(index), y: stepsCount)
             stepEntries.append(value)
         }
         
@@ -250,3 +261,12 @@ extension ViewController: ChartViewDelegate {
     }
 }
 
+class StepsModel {
+    internal init(intervalStartTime: String? = nil, stepsCount: Int? = nil) {
+        self.intervalStartTime = intervalStartTime
+        self.stepsCount = stepsCount
+    }
+    
+    var intervalStartTime: String?
+    var stepsCount: Int?
+}
