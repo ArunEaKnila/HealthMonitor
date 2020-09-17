@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BackgroundTasks
 import UserNotifications
 
 @UIApplicationMain
@@ -15,9 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        print("Did we receive Remote notification \(StorageManager.tempToken)")
-        StorageManager.tempToken = ""
         
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
@@ -58,9 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         // 2. Print device token to use for PNs payloads
         print("Device Token: \(token)")
-        
-        // 3. Save the token to local storeage and post to app server to generate Push Notification. ...
-        StorageManager.deviceToken = token
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -76,29 +69,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         print("didReceiveRemoteNotification")
         
-        StorageManager.tempToken = "LAUNCHED NOTI"
-        
-        guard (userInfo["aps"] as? [String: AnyObject]) != nil else {
-          completionHandler(.failed)
-          return
-        }
-        
-        HealthKitDataFetcher.shared.getSteps { (samples) in
-            guard let samples = samples, !samples.isEmpty else {
-                completionHandler(.noData)
-                return
+        HealthKitDataFetcher.shared.getStepsForLastInterval { [weak self] (steps) in
+            if steps <= 0 {
+                self?.scheduleNotification("You have not walked in the last  \(TimeIntervalManager.shared.timeInterval.displayString)")
             }
             
-            completionHandler(.newData)
+            completionHandler(.noData)
         }
-    }
-    
-    private func handleAppRefresh(_ task: BGTask) {
-        task.expirationHandler = {
-            task.setTaskCompleted(success: false)
-        }
-
-        HealthKitDataFetcher.shared.getStepsFromLastChecked(task)
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
@@ -117,6 +94,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         print("didReceive")
         completionHandler()
+    }
+    
+    func scheduleNotification(_ message: String) {
+        let content = UNMutableNotificationContent()
+
+        content.title = "Walk a little"
+        content.body = message
+        content.categoryIdentifier = "RemindingCategory"
+        let trigger = UNTimeIntervalNotificationTrigger.init(timeInterval: 1, repeats: false)
+        let identifier = "UniqueIdentifier"
+        let request = UNNotificationRequest.init(identifier: identifier, content: content, trigger: trigger)
+
+        let center = UNUserNotificationCenter.current()
+        center.add(request) { (error) in
+            if let error = error {
+                print("Error in scheduling notification ", error.localizedDescription)
+            }
+        }
     }
 }
 

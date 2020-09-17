@@ -75,6 +75,24 @@ extension TimeInterval {
         
         return sysCalendar.dateComponents([.hour, .minute], from: date1, to: date2)
     }
+    
+    var displayString: String {
+        let components = self.components()
+        
+        var value = ""
+        if let hour = components.hour, hour > 0 {
+            value += components.hour == 1 ? "\(hour) hour" : "\(hour) hours"
+            
+            if let minute = components.minute, minute > 0 {
+                value += " and \(minute) minutes"
+            }
+        }
+        else if let minute = components.minute, minute > 0 {
+            value += "\(minute) minutes"
+        }
+        
+        return value
+    }
 }
 
 extension Date {
@@ -86,6 +104,16 @@ extension Date {
             
             return formatter.string(from: self)
         }
+    }
+    
+    func byReducingInterval(_ timeInterval: TimeInterval) -> Date {
+        let calendar = Calendar.current
+        let components = timeInterval.components()
+        
+        var newDate = calendar.date(byAdding:.hour, value: -(components.hour ?? 0), to: self)
+        newDate = calendar.date(byAdding:.minute, value: -(components.minute ?? 0), to: self)
+        
+        return newDate ?? self
     }
 }
 

@@ -18,112 +18,35 @@ class HealthKitDataFetcher {
     
     private let defaults = UserDefaults.standard
     private let hkStore = HKHealthStore()
-    private let timeIntervalToCheck: TimeInterval = 60 * 60
     private let stepsType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
     private let timeManager = TimeIntervalManager.shared
-    private var stepsCompletion: (([HKSample]?) -> ())?
-        
-    var backgroundTask: BGAppRefreshTask?
     
-    var lastCheckedTime: Date {
-        get {
-            let timeInterval = defaults.double(forKey: "lastCheckedTime")
-            return Date(timeIntervalSinceReferenceDate: timeInterval)
-        }
-        set {
-            let timeInterval = newValue.timeIntervalSinceReferenceDate
-            defaults.set(timeInterval, forKey: "lastCheckedTime")
-        }
-    }
-    
-    private var scheduleTime: TimeInterval {
-        let timeDiff = Date().timeIntervalSinceReferenceDate - lastCheckedTime.timeIntervalSinceReferenceDate
-        if timeDiff >= timeIntervalToCheck || timeDiff < 0 {
-            return 5
-        }
-        else {
-            return timeIntervalToCheck - timeDiff
-        }
-    }
-    
-    func scheduleAppRefresh() {
-        do {
-            let request = BGAppRefreshTaskRequest(identifier: "com.knila.HealthMonitor.checkSteps")
-            request.earliestBeginDate = Date(timeIntervalSinceNow: scheduleTime)
-            try BGTaskScheduler.shared.submit(request)
-            
-            print("Scheduled a step check \(scheduleTime) seconds from now")
-        } catch {
-            print("Unable to submit task: \(error.localizedDescription)")
-        }
-    }
-    
-    func getStepsFromLastChecked(_ task: BGTask) {
-        let oneHourAgo = Date().addingTimeInterval(-timeIntervalToCheck)
-        let lastHourPredicate = NSPredicate(format: "endDate > %@", oneHourAgo as NSDate)
-        
-        let stepsSampleQuery = HKSampleQuery(
-                sampleType: stepsType,
-                predicate: lastHourPredicate,
-                limit: HKObjectQueryNoLimit,
-                sortDescriptors: nil,
-                resultsHandler: { [weak self] (query, samples, error) in
-                    self?.stepsSampleQueryFinished(samples: samples)
-            })
-        hkStore.execute(stepsSampleQuery)
-    }
-    
-    func getSteps(_ completion: @escaping ([HKSample]?) -> ()) {
-        let oneHourAgo = Date().addingTimeInterval(-timeIntervalToCheck)
-        let lastHourPredicate = NSPredicate(format: "endDate > %@", oneHourAgo as NSDate)
-        
-        let stepsSampleQuery = HKSampleQuery(
-                sampleType: stepsType,
-                predicate: lastHourPredicate,
-                limit: HKObjectQueryNoLimit,
-                sortDescriptors: nil,
-                resultsHandler: { [weak self] (query, samples, error) in
-                    self?.stepsSampleQueryFinished(samples: samples)
-            })
-        hkStore.execute(stepsSampleQuery)
-        
-        self.stepsCompletion = completion
-    }
-
-    func stepsSampleQueryFinished(samples: [HKSample]?) {
-        
-        samples?.forEach({ (sample) in
-            guard let sample = sample as? HKQuantitySample else {
-                return
-            }
-            
-            print("SAMPLE DETAILS \(sample.quantity) \(sample.sampleType) at \(sample.endDate)")
-        })
-        
-        print("stepsSampleQueryFinished hi")
-        self.lastCheckedTime = Date()
-//        scheduleNotification("From Background")
-//        scheduleAppRefresh()
-        
-        stepsCompletion?(samples)
-    }
-    
-    func scheduleNotification(_ message: String) {
-        let content = UNMutableNotificationContent()
-
-        content.title = "Yay"
-        content.body = message
-        content.categoryIdentifier = "CALLINNOTIFICATION"
-        let trigger = UNTimeIntervalNotificationTrigger.init(timeInterval: 1, repeats: false)
-        let identifier = "id_Title"
-        let request = UNNotificationRequest.init(identifier: identifier, content: content, trigger: trigger)
-
-        let center = UNUserNotificationCenter.current()
-        center.add(request) { (error) in
-            print("Error in scheduling noti ", error?.localizedDescription ?? "")
+    func getStepsForLastInterval(_ completion: @escaping (Int) -> Void) {
+        guard let stepCountType = HKObjectType.quantityType(forIdentifier: .stepCount) else {
+            fatalError("*** Unable to get the step count type ***")
         }
         
-        self.backgroundTask?.setTaskCompleted(success: true)
+        let interval = timeManager.timeInterval.components()
+        let endTime = Date()
+        let startTime = endTime.byReducingInterval(timeManager.timeInterval)
+     
+        let query = HKStatisticsCollectionQuery.init(quantityType: stepCountType,
+                                                     quantitySamplePredicate: nil,
+                                                     options: .cumulativeSum,
+                                                     anchorDate: startTime,
+                                                     intervalComponents: interval)
+                
+        query.initialResultsHandler = {
+            query, results, error in
+                 
+            results?.enumerateStatistics(from: startTime,
+                                         to: endTime, with: { (result, stop) in
+                                            let count = result.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0
+                                            completion(Int(count))
+                })
+        }
+        
+        hkStore.execute(query)
     }
     
     func getStepsForEachHour(_ date: Date, _ completion: @escaping ([String]) -> Void) {

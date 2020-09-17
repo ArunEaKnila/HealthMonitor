@@ -18,7 +18,6 @@
 		184C1E95250107A10007B49E /* HealthKitSetupAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */; };
 		184C1E9825060FA20007B49E /* HealthKitDataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */; };
 		1857D3F7250F56DD007559C8 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857D3F6250F56DD007559C8 /* SpinnerView.swift */; };
-		1895C5F8250784940021FA35 /* LocalStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1895C5F7250784940021FA35 /* LocalStorageManager.swift */; };
 		18CAC94B250A15A500B1EEF1 /* TimeIntervalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */; };
 		3458526BF7EF2B7FF19A5C0D /* Pods_HealthMonitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768A5110329AE585CB690FDD /* Pods_HealthMonitor.framework */; };
 /* End PBXBuildFile section */
@@ -38,7 +37,6 @@
 		184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupAssistant.swift; sourceTree = "<group>"; };
 		184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitDataFetcher.swift; sourceTree = "<group>"; };
 		1857D3F6250F56DD007559C8 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
-		1895C5F7250784940021FA35 /* LocalStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorageManager.swift; sourceTree = "<group>"; };
 		18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalManager.swift; sourceTree = "<group>"; };
 		2C6CA3ABF81B5202FD2D12C6 /* Pods-HealthMonitor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthMonitor.release.xcconfig"; path = "Target Support Files/Pods-HealthMonitor/Pods-HealthMonitor.release.xcconfig"; sourceTree = "<group>"; };
 		3695992EF61CBF917489CF7A /* Pods-HealthMonitor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthMonitor.debug.xcconfig"; path = "Target Support Files/Pods-HealthMonitor/Pods-HealthMonitor.debug.xcconfig"; sourceTree = "<group>"; };
@@ -97,7 +95,6 @@
 				184C1E84250100BB0007B49E /* Assets.xcassets */,
 				184C1E86250100BB0007B49E /* LaunchScreen.storyboard */,
 				184C1E89250100BB0007B49E /* Info.plist */,
-				1895C5F7250784940021FA35 /* LocalStorageManager.swift */,
 				18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */,
 				1811C1B8250A1AE800DBF42E /* CollectionViewCells */,
 				1857D3F5250F569B007559C8 /* CustomView */,
@@ -251,7 +248,6 @@
 				184C1E9825060FA20007B49E /* HealthKitDataFetcher.swift in Sources */,
 				184C1E80250100B20007B49E /* ViewController.swift in Sources */,
 				184C1E95250107A10007B49E /* HealthKitSetupAssistant.swift in Sources */,
-				1895C5F8250784940021FA35 /* LocalStorageManager.swift in Sources */,
 				1811C1B7250A1AD600DBF42E /* TimeIntervalCollectionCell.swift in Sources */,
 				184C1E7C250100B20007B49E /* AppDelegate.swift in Sources */,
 				18CAC94B250A15A500B1EEF1 /* TimeIntervalManager.swift in Sources */,
@@ -404,7 +400,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9722T8G52H;
 				INFOPLIST_FILE = HealthMonitor/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -426,7 +422,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9722T8G52H;
 				INFOPLIST_FILE = HealthMonitor/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
