@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PzO-UB-sdB">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -8,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Dashboard View Controller-->
+        <!--Health Monitor-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="DashboardViewController" customModule="HealthMonitor" customModuleProvider="target" sceneMemberID="viewController">
@@ -230,6 +232,9 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cQW-w4-Zgd">
                                                 <rect key="frame" x="153" y="510" width="108" height="30"/>
                                                 <state key="normal" title="Change Interval"/>
+                                                <connections>
+                                                    <segue destination="bVH-gZ-bMu" kind="show" id="XMe-Rr-niy"/>
+                                                </connections>
                                             </button>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="steps_frame_circle" translatesAutoresizingMaskIntoConstraints="NO" id="iym-bd-qJZ">
                                                 <rect key="frame" x="127" y="548" width="160" height="160"/>
@@ -362,6 +367,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Health Monitor" id="a4y-ep-HDS"/>
                     <size key="freeformSize" width="414" height="1300"/>
                     <connections>
                         <outlet property="calendarHeightConstraint" destination="enW-nb-kck" id="BXW-ci-mBH"/>
@@ -375,6 +381,107 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="639.13043478260875" y="-208.25892857142856"/>
+        </scene>
+        <!--Change Interval-->
+        <scene sceneID="O7P-3B-amh">
+            <objects>
+                <viewController id="bVH-gZ-bMu" customClass="ChooseIntervalViewController" customModule="HealthMonitor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8dA-lk-evJ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose an interval for us to remind you to take a walk, Please note that minimum interval is 45 minutes" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ywg-7C-azR">
+                                <rect key="frame" x="20" y="98" width="374" height="61"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.55143229169999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="bte-XD-kkP">
+                                <rect key="frame" x="0.0" y="189" width="414" height="246.5"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="b71-zn-V73">
+                                        <rect key="frame" x="0.0" y="0.0" width="207" height="246.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hours" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="553-a8-llV">
+                                                <rect key="frame" x="80.5" y="0.0" width="46" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="smA-rx-qQW">
+                                                <rect key="frame" x="0.0" y="30.5" width="207" height="216"/>
+                                                <connections>
+                                                    <outlet property="dataSource" destination="bVH-gZ-bMu" id="m7d-v7-hXJ"/>
+                                                    <outlet property="delegate" destination="bVH-gZ-bMu" id="but-VK-jlD"/>
+                                                </connections>
+                                            </pickerView>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="p3p-4W-I2Y">
+                                        <rect key="frame" x="207" y="0.0" width="207" height="246.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Minutes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jdc-lv-HGN">
+                                                <rect key="frame" x="73" y="0.0" width="61" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ier-LD-Bif">
+                                                <rect key="frame" x="0.0" y="30.5" width="207" height="216"/>
+                                                <connections>
+                                                    <outlet property="dataSource" destination="bVH-gZ-bMu" id="SO3-Ci-XGh"/>
+                                                    <outlet property="delegate" destination="bVH-gZ-bMu" id="RPi-Ly-J1W"/>
+                                                </connections>
+                                            </pickerView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="bte-XD-kkP" firstAttribute="leading" secondItem="8dA-lk-evJ" secondAttribute="leading" id="26U-wf-O8g"/>
+                            <constraint firstItem="ywg-7C-azR" firstAttribute="top" secondItem="GUg-J4-jSu" secondAttribute="top" constant="10" id="2M2-ei-TFC"/>
+                            <constraint firstItem="GUg-J4-jSu" firstAttribute="trailing" secondItem="ywg-7C-azR" secondAttribute="trailing" constant="20" id="BLG-1Z-Dcj"/>
+                            <constraint firstItem="ywg-7C-azR" firstAttribute="leading" secondItem="GUg-J4-jSu" secondAttribute="leading" constant="20" id="Wcs-E2-zYd"/>
+                            <constraint firstAttribute="trailing" secondItem="bte-XD-kkP" secondAttribute="trailing" id="bek-Xf-Q3N"/>
+                            <constraint firstItem="bte-XD-kkP" firstAttribute="top" secondItem="ywg-7C-azR" secondAttribute="bottom" constant="30" id="jHy-xL-Z5R"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="GUg-J4-jSu"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Change Interval" largeTitleDisplayMode="never" id="OdW-hR-E5h">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="bd7-HX-PoX">
+                            <connections>
+                                <action selector="doneTapped:" destination="bVH-gZ-bMu" id="1Md-VI-wQb"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="hoursPickerView" destination="smA-rx-qQW" id="jRc-WU-Kgz"/>
+                        <outlet property="minutePickerView" destination="Ier-LD-Bif" id="kG5-nL-Myw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Yik-Le-nD6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1585.5072463768117" y="-208.25892857142856"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="fPT-op-efU">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PzO-UB-sdB" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="wiS-hC-ZGr">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="D5V-a1-f8c"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CCp-Fj-GIs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-271.01449275362319" y="-208.25892857142856"/>
         </scene>

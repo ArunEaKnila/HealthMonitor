@@ -8,8 +8,11 @@
 
 import Foundation
 
-struct TimeIntervalManager {
+class TimeIntervalManager {
     static let shared = TimeIntervalManager()
+    
+    private init() {}
+    
     let calendar = Calendar.current
     
     var timeInterval: TimeInterval = 45 * 60
@@ -64,6 +67,15 @@ struct TimeIntervalManager {
         let addedDate = now.addingTimeInterval(timeInterval)
         
         return date > now && date <= addedDate
+    }
+    
+    func chooseIntervalData(_ hour: Int = 0) -> (hours: [Int], minutes: [Int]) {
+        if hour == 0 {
+            return ([0, 1, 2, 3, 4, 5], [45])
+        }
+        else {
+            return ([0, 1, 2, 3, 4, 5], [0, 15, 30, 45])
+        }
     }
 }
 
