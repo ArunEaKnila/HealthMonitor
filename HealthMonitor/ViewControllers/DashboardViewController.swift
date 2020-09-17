@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  DashboardViewController.swift
 //  HealthMonitor
 //
 //  Created by apple on 03/09/20.
@@ -12,7 +12,7 @@ import UserNotifications
 import Charts
 import FSCalendar
 
-class ViewController: UIViewController {
+class DashboardViewController: UIViewController {
     
     let stepsType = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)!
     let hkStore = HKHealthStore()
@@ -67,7 +67,7 @@ class ViewController: UIViewController {
 }
 
 // MARK: Health Kit
-extension ViewController {
+extension DashboardViewController {
     private func refreshHealthKitData() {
         HealthKitDataFetcher.shared.getStepsForEachHour(self.calendarView.selectedDate ?? Date()) { (results) in
             for index in 0..<self.intervalsArray.count {
@@ -119,7 +119,7 @@ extension ViewController {
 }
 
 // MARK: Day Collection View
-extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension DashboardViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if !intervalsArray.isEmpty {
             return intervalsArray.count * 2 - 1
@@ -166,7 +166,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
 }
 
 // MARK: Charts - Heart Rate
-extension ViewController: ChartViewDelegate {
+extension DashboardViewController: ChartViewDelegate {
     private func initializeCharts() {
         self.heartRateView.delegate = self
         self.heartRateView.xAxis.granularity = 1
@@ -220,7 +220,7 @@ extension ViewController: ChartViewDelegate {
 }
 
 // MARK: Calendar
-extension ViewController: FSCalendarDataSource, FSCalendarDelegate {
+extension DashboardViewController: FSCalendarDataSource, FSCalendarDelegate {
     func initializeCalendar() {
         self.calendarView.setScope(.week, animated: false)
     }

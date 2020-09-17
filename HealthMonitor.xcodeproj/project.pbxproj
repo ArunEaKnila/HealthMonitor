@@ -9,8 +9,9 @@
 /* Begin PBXBuildFile section */
 		1811C1B7250A1AD600DBF42E /* TimeIntervalCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1811C1B6250A1AD600DBF42E /* TimeIntervalCollectionCell.swift */; };
 		1811C1BA250A1B3600DBF42E /* StepIntervalCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1811C1B9250A1B3600DBF42E /* StepIntervalCollectionCell.swift */; };
+		18456C1B25133C8700566702 /* ChooseIntervalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18456C1A25133C8700566702 /* ChooseIntervalViewController.swift */; };
 		184C1E7C250100B20007B49E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E7B250100B20007B49E /* AppDelegate.swift */; };
-		184C1E80250100B20007B49E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E7F250100B20007B49E /* ViewController.swift */; };
+		184C1E80250100B20007B49E /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E7F250100B20007B49E /* DashboardViewController.swift */; };
 		184C1E83250100B20007B49E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 184C1E81250100B20007B49E /* Main.storyboard */; };
 		184C1E85250100BB0007B49E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 184C1E84250100BB0007B49E /* Assets.xcassets */; };
 		184C1E88250100BB0007B49E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 184C1E86250100BB0007B49E /* LaunchScreen.storyboard */; };
@@ -25,9 +26,10 @@
 /* Begin PBXFileReference section */
 		1811C1B6250A1AD600DBF42E /* TimeIntervalCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalCollectionCell.swift; sourceTree = "<group>"; };
 		1811C1B9250A1B3600DBF42E /* StepIntervalCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepIntervalCollectionCell.swift; sourceTree = "<group>"; };
+		18456C1A25133C8700566702 /* ChooseIntervalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseIntervalViewController.swift; sourceTree = "<group>"; };
 		184C1E78250100B20007B49E /* HealthMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		184C1E7B250100B20007B49E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		184C1E7F250100B20007B49E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		184C1E7F250100B20007B49E /* DashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
 		184C1E82250100B20007B49E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		184C1E84250100BB0007B49E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		184C1E87250100BB0007B49E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -65,6 +67,42 @@
 			path = CollectionViewCells;
 			sourceTree = "<group>";
 		};
+		18456C1625133AB800566702 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				184C1E7F250100B20007B49E /* DashboardViewController.swift */,
+				18456C1A25133C8700566702 /* ChooseIntervalViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		18456C1725133AC900566702 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		18456C1825133BE700566702 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */,
+				184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		18456C1925133BF900566702 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				184C1E81250100B20007B49E /* Main.storyboard */,
+				184C1E86250100BB0007B49E /* LaunchScreen.storyboard */,
+				184C1E84250100BB0007B49E /* Assets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		184C1E6F250100B20007B49E = {
 			isa = PBXGroup;
 			children = (
@@ -86,18 +124,15 @@
 		184C1E7A250100B20007B49E /* HealthMonitor */ = {
 			isa = PBXGroup;
 			children = (
-				184C1E90250106FA0007B49E /* HealthMonitor.entitlements */,
 				184C1E7B250100B20007B49E /* AppDelegate.swift */,
-				184C1E7F250100B20007B49E /* ViewController.swift */,
-				184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */,
-				184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */,
-				184C1E81250100B20007B49E /* Main.storyboard */,
-				184C1E84250100BB0007B49E /* Assets.xcassets */,
-				184C1E86250100BB0007B49E /* LaunchScreen.storyboard */,
-				184C1E89250100BB0007B49E /* Info.plist */,
-				18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */,
+				18456C1625133AB800566702 /* ViewControllers */,
 				1811C1B8250A1AE800DBF42E /* CollectionViewCells */,
 				1857D3F5250F569B007559C8 /* CustomView */,
+				18456C1725133AC900566702 /* ViewModels */,
+				18456C1825133BE700566702 /* Helpers */,
+				18456C1925133BF900566702 /* Assets */,
+				184C1E90250106FA0007B49E /* HealthMonitor.entitlements */,
+				184C1E89250100BB0007B49E /* Info.plist */,
 			);
 			path = HealthMonitor;
 			sourceTree = "<group>";
@@ -243,10 +278,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18456C1B25133C8700566702 /* ChooseIntervalViewController.swift in Sources */,
 				1811C1BA250A1B3600DBF42E /* StepIntervalCollectionCell.swift in Sources */,
 				1857D3F7250F56DD007559C8 /* SpinnerView.swift in Sources */,
 				184C1E9825060FA20007B49E /* HealthKitDataFetcher.swift in Sources */,
-				184C1E80250100B20007B49E /* ViewController.swift in Sources */,
+				184C1E80250100B20007B49E /* DashboardViewController.swift in Sources */,
 				184C1E95250107A10007B49E /* HealthKitSetupAssistant.swift in Sources */,
 				1811C1B7250A1AD600DBF42E /* TimeIntervalCollectionCell.swift in Sources */,
 				184C1E7C250100B20007B49E /* AppDelegate.swift in Sources */,
