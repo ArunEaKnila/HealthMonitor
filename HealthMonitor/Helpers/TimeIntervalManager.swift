@@ -15,7 +15,11 @@ class TimeIntervalManager {
     
     let calendar = Calendar.current
     
-    var timeInterval: TimeInterval = 45 * 60
+    var timeInterval: TimeInterval = 45 * 60 {
+        didSet {
+            NotificationCenter.default.post(name: .intervalChanged, object: self)
+        }
+    }
     var wakeTime: Date {
         var components = calendar.dateComponents([.year, .month, .day], from: Date())
         components.hour = 9
@@ -42,6 +46,11 @@ class TimeIntervalManager {
             iterDate = iterDate.addingTimeInterval(timeInterval)
         }
         
+        // Add bed time if last interval is less than bedTime
+        if iterDate >= bedTime {
+            timeIntervals.append(bedTime.time)
+        }
+        
         return timeIntervals
     }
     
@@ -62,11 +71,11 @@ class TimeIntervalManager {
         return (wakeDate ?? Date(), bedDate ?? Date())
     }
     
-    func isDateInRange(_ date: Date) -> Bool {
+    func isDateInRange(_ startDate: Date) -> Bool {
         let now = Date()
-        let addedDate = now.addingTimeInterval(timeInterval)
+        let addedDate = startDate.addingTimeInterval(timeInterval)
         
-        return date > now && date <= addedDate
+        return now > startDate && now <= addedDate
     }
     
     func chooseIntervalData(_ hour: Int = 0) -> (hours: [Int], minutes: [Int]) {

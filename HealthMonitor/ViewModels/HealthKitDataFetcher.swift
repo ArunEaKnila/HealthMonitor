@@ -54,15 +54,13 @@ class HealthKitDataFetcher {
             fatalError("*** Unable to get the step count type ***")
         }
         
-        let calendar = Calendar.current
         let interval = timeManager.timeInterval.components()
         let (wakeTime, bedTime) = timeManager.getWakeAndBedTimeAsDate(date)
-        let anchorDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date)
      
         let query = HKStatisticsCollectionQuery.init(quantityType: stepCountType,
                                                      quantitySamplePredicate: nil,
                                                      options: .cumulativeSum,
-                                                     anchorDate: anchorDate!,
+                                                     anchorDate: wakeTime,
                                                      intervalComponents: interval)
         
         var stepsCount = [String]()
@@ -88,15 +86,13 @@ class HealthKitDataFetcher {
             fatalError("*** Unable to get the heart rate count type ***")
         }
         
-        let calendar = Calendar.current
         let interval = timeManager.timeInterval.components()
         let (wakeTime, bedTime) = timeManager.getWakeAndBedTimeAsDate(date)
-        let anchorDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date)
      
         let query = HKStatisticsCollectionQuery.init(quantityType: heartRateType,
                                                      quantitySamplePredicate: nil,
                                                      options: .discreteAverage,
-                                                     anchorDate: anchorDate!,
+                                                     anchorDate: wakeTime,
                                                      intervalComponents: interval)
         
         var heartRateCount = [Int]()

@@ -48,6 +48,7 @@ class DashboardViewController: UIViewController {
         initializeCalendar()
         initializeCharts()
         refreshHealthKitData()
+        observeIntervalChanges()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -64,6 +65,18 @@ class DashboardViewController: UIViewController {
             }
         }
     }
+    
+    private func observeIntervalChanges() {
+        NotificationCenter.default.addObserver(forName: .intervalChanged, object: timeManager, queue: nil) { [weak self] (notification) in
+            if let allIntervals = self?.timeManager.getTimeIntervals() {
+                self?.intervalsArray = allIntervals.map({
+                    return StepsModel(intervalStartTime: $0, stepsCount: 0, heartRate: 0)
+                })
+                
+                self?.refreshHealthKitData()
+            }
+        }
+    }
 }
 
 // MARK: Health Kit
@@ -72,7 +85,7 @@ extension DashboardViewController {
         HealthKitDataFetcher.shared.getStepsForEachHour(self.calendarView.selectedDate ?? Date()) { (results) in
             for index in 0..<self.intervalsArray.count {
                 let stepsModel = self.intervalsArray[index]
-                stepsModel.stepsCount = Int(Double(results[index]) ?? 0)
+                stepsModel.stepsCount = Int(Double(results[safe: index] ?? "0") ?? 0)
             }
             
             DispatchQueue.main.async {
@@ -88,7 +101,7 @@ extension DashboardViewController {
         HealthKitDataFetcher.shared.getHeartRateForEachHour(self.calendarView.selectedDate ?? Date()) { (results) in
             for index in 0..<self.intervalsArray.count {
                 let stepsModel = self.intervalsArray[index]
-                stepsModel.heartRate = results[index]
+                stepsModel.heartRate = results[safe: index] ?? 0
             }
             
             DispatchQueue.main.async {
@@ -141,6 +154,7 @@ extension DashboardViewController: UICollectionViewDataSource, UICollectionViewD
             let stepsModel = intervalsArray[indexPath.row / 2]
             if let interval = stepsModel.intervalStartTime, let date = interval.date {
                 let isNow = Calendar.current.isDateInToday(calendarView.selectedDate ?? Date()) && TimeIntervalManager.shared.isDateInRange(date)
+                                
                 cell.configure("\(stepsModel.stepsCount ?? 0)", isToday: isNow)
             }
             
