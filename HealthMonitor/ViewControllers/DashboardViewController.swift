@@ -19,6 +19,7 @@ class DashboardViewController: UIViewController {
     var stepsObserverQuery: HKObserverQuery?
     let kUserDefaultsAnchorKey = "kUserDefaultsAnchorKey"
     let timeManager = TimeIntervalManager.shared
+    lazy var infoCollectionController = HealthInfoCollectionController(self)
     var intervalsArray = [StepsModel]()
     var todayIndexPath: IndexPath? {
         didSet {
@@ -29,13 +30,11 @@ class DashboardViewController: UIViewController {
     }
 
     @IBOutlet weak var heartRateView: LineChartView!
-    @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var dayCollectionView: UICollectionView!
+    @IBOutlet weak var healthInfoCollectionView: UICollectionView!
     @IBOutlet weak var calendarHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var calendarView: FSCalendar!
     @IBOutlet weak var totalStepsLabel: UILabel!
-    @IBOutlet weak var heartRateLabel: UILabel!
-    @IBOutlet weak var totalDistLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +46,7 @@ class DashboardViewController: UIViewController {
         
         initializeCalendar()
         initializeCharts()
+        setupInfoCollectionView()
         refreshHealthKitData()
         observeIntervalChanges()
     }
@@ -98,23 +98,7 @@ extension DashboardViewController {
             }
         }
         
-        HealthKitDataFetcher.shared.getHeartRateForEachHour(self.calendarView.selectedDate ?? Date()) { (results) in
-            for index in 0..<self.intervalsArray.count {
-                let stepsModel = self.intervalsArray[index]
-                stepsModel.heartRate = results[safe: index] ?? 0
-            }
-            
-            DispatchQueue.main.async {
-                self.heartRateLabel.text = String(self.averageHeartRate())
-                self.refreshChartsData()
-            }
-        }
-        
-        HealthKitDataFetcher.shared.getFullDistance(self.calendarView.selectedDate ?? Date()) { (totalDistance) in
-            DispatchQueue.main.async {
-                self.totalDistLabel.text = String(format: "%.2f", totalDistance)
-            }
-        }
+        infoCollectionController.displayDate = self.calendarView.selectedDate ?? Date()
     }
     
     private func averageHeartRate() -> Int {
@@ -256,6 +240,18 @@ extension DashboardViewController: FSCalendarDataSource, FSCalendarDelegate {
     func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
         calendarView.select(calendar.currentPage, scrollToDate: false)
         refreshHealthKitData()
+    }
+}
+
+// MARK: Info CollectionView setup
+extension DashboardViewController: CollectionControllerDelegate {
+    func setupInfoCollectionView() {
+        healthInfoCollectionView.dataSource = infoCollectionController
+        healthInfoCollectionView.delegate = infoCollectionController
+    }
+    
+    func reloadData() {
+        healthInfoCollectionView.reloadData()
     }
 }
 

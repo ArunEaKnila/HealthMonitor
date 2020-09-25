@@ -1,42 +1,117 @@
-/**
- * Copyright (c) 2017 Razeware LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
- * distribute, sublicense, create a derivative work, and/or sell copies of the
- * Software in any work that is designed, intended, or marketed for pedagogical or
- * instructional purposes related to programming, coding, application development,
- * or information technology.  Permission for such use, copying, modification,
- * merger, publication, distribution, sublicensing, creation of derivative works,
- * or sale is expressly withheld.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
 import HealthKit
 
-class HealthKitSetupAssistant {
+enum HealthkitSetupError: Error {
+    case notAvailableOnDevice
+    case stepCountNotSupported
+    case heartRateNotSupported
+    case distanceNotSupported
+}
+
+enum ActivityType: CaseIterable {
+    case stepCount, heartRate, walkingDistance
     
-    private enum HealthkitSetupError: Error {
-        case notAvailableOnDevice
-        case dataTypeNotAvailable
+    static let supportedTypes: Set<HKObjectType> = {
+        var objectSet = Set<HKObjectType>()
+        
+        for type in ActivityType.allCases {
+            if let type = type.sampleType {
+                objectSet.insert(type)
+            }
+        }
+        
+        return objectSet
+    }()
+        
+    var error: HealthkitSetupError {
+        switch self {
+        case .stepCount:
+            return .stepCountNotSupported
+        case .heartRate:
+            return .heartRateNotSupported
+        case .walkingDistance:
+            return .distanceNotSupported
+        }
     }
     
+    var sampleType: HKQuantityType? {
+        switch self {
+        case .stepCount:
+            return HKObjectType.quantityType(forIdentifier: .stepCount)
+        case .heartRate:
+            return HKObjectType.quantityType(forIdentifier: .heartRate)
+        case .walkingDistance:
+            return HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)
+        }
+    }
+    
+    var option: HKStatisticsOptions {
+        switch self {
+        case .stepCount:
+            return .cumulativeSum
+        case .heartRate:
+            return .discreteAverage
+        case .walkingDistance:
+            return .cumulativeSum
+        }
+    }
+    
+    var unit: HKUnit {
+        switch self {
+        case .stepCount:
+            return HKUnit.count()
+        case .heartRate:
+            return HKUnit.count().unitDivided(by: HKUnit.minute())
+        case .walkingDistance:
+            return HKUnit.mile()
+        }
+    }
+    
+    func value(forStatistics statistics: HKStatistics?) -> Double? {
+        switch self {
+        case .stepCount:
+            return statistics?.sumQuantity()?.doubleValue(for: self.unit)
+        case .heartRate:
+            return statistics?.averageQuantity()?.doubleValue(for: self.unit)
+        case .walkingDistance:
+            return statistics?.sumQuantity()?.doubleValue(for: self.unit)
+        }
+    }
+    
+    var titleLabel: String {
+        switch self {
+        case .stepCount:
+            return "TOTAL STEPS"
+        case .heartRate:
+            return "HEART RATE"
+        case .walkingDistance:
+            return "DISTANCE"
+        }
+    }
+    
+    var subTitleLabel: String {
+        switch self {
+        case .stepCount:
+            return "STEPS"
+        case .heartRate:
+            return "BPM"
+        case .walkingDistance:
+            return "MILES"
+        }
+    }
+    
+    func formatValue(_ value: Double) -> String {
+        switch self {
+        case .stepCount:
+            return String(format: "%.0f", value)
+        case .heartRate:
+            return String(format: "%.1f", value)
+        case .walkingDistance:
+            return String(format: "%.2f", value)
+        }
+    }
+}
+
+class HealthKitSetupAssistant {
     class func authorizeHealthKit(completion: @escaping (Bool, Error?) -> Swift.Void) {
         
         //1. Check to see if HealthKit Is Available on this device
@@ -45,23 +120,9 @@ class HealthKitSetupAssistant {
             return
         }
         
-        //2. Prepare the data types that will interact with HealthKit
-        guard let stepCount = HKObjectType.quantityType(forIdentifier: .stepCount),
-            let heartRate = HKObjectType.quantityType(forIdentifier: .heartRate),
-            let walkingDistance = HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)
-        else {
-            completion(false, HealthkitSetupError.dataTypeNotAvailable)
-            return
-        }
-        
-        //3. Prepare a list of types you want HealthKit to read and write
-        //let healthKitTypesToWrite: Set<HKSampleType> = [bodyMassIndex, activeEnergy, HKObjectType.workoutType()]
-        
-        let healthKitTypesToRead: Set<HKObjectType> = [stepCount, heartRate, walkingDistance]
-        
         //4. Request Authorization
         HKHealthStore().requestAuthorization(toShare: nil,
-                                             read: healthKitTypesToRead) { (success, error) in
+                                             read: ActivityType.supportedTypes) { (success, error) in
                                                 completion(success, error)
         }
     }

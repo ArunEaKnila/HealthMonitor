@@ -138,4 +138,29 @@ class HealthKitDataFetcher {
         
         hkStore.execute(query)
     }
+    
+    func getData(forType type: ActivityType, andDate date: Date, options: HKStatisticsOptions = .cumulativeSum, _ completion: @escaping (Double, ActivityType) -> Void) {
+        guard let sampleType = type.sampleType else {
+            fatalError("*** Unable to get the walking / running type ***")
+        }
+        let (wakeTime, bedTime) = timeManager.getWakeAndBedTimeAsDate(date)
+
+        let predicate = HKQuery.predicateForSamples(withStart: wakeTime, end: bedTime, options: .strictStartDate)
+
+        let query = HKStatisticsQuery(quantityType: sampleType, quantitySamplePredicate: predicate, options: [options]) { (query, statistics, error) in
+            var value: Double = 0
+
+            if error != nil {
+                print("HealthKit error \(error.debugDescription)")
+            } else if let quantity = type.value(forStatistics: statistics) {
+                value = quantity
+            }
+            
+            DispatchQueue.main.async {
+                completion(value, type)
+            }
+        }
+        
+        hkStore.execute(query)
+    }
 }

@@ -20,8 +20,11 @@
 		184C1E9825060FA20007B49E /* HealthKitDataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */; };
 		1857D3F7250F56DD007559C8 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857D3F6250F56DD007559C8 /* SpinnerView.swift */; };
 		18CAC94B250A15A500B1EEF1 /* TimeIntervalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */; };
+		18F05253251DAAB50052CB76 /* HealthTypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F05252251DAAB50052CB76 /* HealthTypeCollectionViewCell.swift */; };
+		18F05257251DAF7F0052CB76 /* ActivityDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F05256251DAF7F0052CB76 /* ActivityDataSource.swift */; };
 		18F33B29251B27730049B01A /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F33B28251B27730049B01A /* NotificationHelper.swift */; };
 		18F33B51251B52560049B01A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F33B50251B52560049B01A /* Extensions.swift */; };
+		18F33BEA251C77290049B01A /* HealthInfoCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F33BE9251C77280049B01A /* HealthInfoCollectionController.swift */; };
 		3458526BF7EF2B7FF19A5C0D /* Pods_HealthMonitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 768A5110329AE585CB690FDD /* Pods_HealthMonitor.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,8 +45,11 @@
 		184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitDataFetcher.swift; sourceTree = "<group>"; };
 		1857D3F6250F56DD007559C8 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		18CAC94A250A15A500B1EEF1 /* TimeIntervalManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalManager.swift; sourceTree = "<group>"; };
+		18F05252251DAAB50052CB76 /* HealthTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthTypeCollectionViewCell.swift; sourceTree = "<group>"; };
+		18F05256251DAF7F0052CB76 /* ActivityDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDataSource.swift; sourceTree = "<group>"; };
 		18F33B28251B27730049B01A /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		18F33B50251B52560049B01A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		18F33BE9251C77280049B01A /* HealthInfoCollectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthInfoCollectionController.swift; sourceTree = "<group>"; };
 		2C6CA3ABF81B5202FD2D12C6 /* Pods-HealthMonitor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthMonitor.release.xcconfig"; path = "Target Support Files/Pods-HealthMonitor/Pods-HealthMonitor.release.xcconfig"; sourceTree = "<group>"; };
 		3695992EF61CBF917489CF7A /* Pods-HealthMonitor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthMonitor.debug.xcconfig"; path = "Target Support Files/Pods-HealthMonitor/Pods-HealthMonitor.debug.xcconfig"; sourceTree = "<group>"; };
 		768A5110329AE585CB690FDD /* Pods_HealthMonitor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthMonitor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +73,7 @@
 			children = (
 				1811C1B6250A1AD600DBF42E /* TimeIntervalCollectionCell.swift */,
 				1811C1B9250A1B3600DBF42E /* StepIntervalCollectionCell.swift */,
+				18F05252251DAAB50052CB76 /* HealthTypeCollectionViewCell.swift */,
 			);
 			path = CollectionViewCells;
 			sourceTree = "<group>";
@@ -76,6 +83,7 @@
 			children = (
 				184C1E7F250100B20007B49E /* DashboardViewController.swift */,
 				18456C1A25133C8700566702 /* ChooseIntervalViewController.swift */,
+				18F33BE9251C77280049B01A /* HealthInfoCollectionController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -84,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				184C1E9725060FA20007B49E /* HealthKitDataFetcher.swift */,
+				18F05256251DAF7F0052CB76 /* ActivityDataSource.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -288,9 +297,12 @@
 				1811C1BA250A1B3600DBF42E /* StepIntervalCollectionCell.swift in Sources */,
 				1857D3F7250F56DD007559C8 /* SpinnerView.swift in Sources */,
 				184C1E9825060FA20007B49E /* HealthKitDataFetcher.swift in Sources */,
+				18F05253251DAAB50052CB76 /* HealthTypeCollectionViewCell.swift in Sources */,
+				18F33BEA251C77290049B01A /* HealthInfoCollectionController.swift in Sources */,
 				184C1E80250100B20007B49E /* DashboardViewController.swift in Sources */,
 				184C1E95250107A10007B49E /* HealthKitSetupAssistant.swift in Sources */,
 				18F33B29251B27730049B01A /* NotificationHelper.swift in Sources */,
+				18F05257251DAF7F0052CB76 /* ActivityDataSource.swift in Sources */,
 				1811C1B7250A1AD600DBF42E /* TimeIntervalCollectionCell.swift in Sources */,
 				184C1E7C250100B20007B49E /* AppDelegate.swift in Sources */,
 				18F33B51251B52560049B01A /* Extensions.swift in Sources */,
