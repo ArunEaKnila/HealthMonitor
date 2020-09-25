@@ -19,7 +19,6 @@ class DashboardViewController: UIViewController {
     var stepsObserverQuery: HKObserverQuery?
     let kUserDefaultsAnchorKey = "kUserDefaultsAnchorKey"
     let timeManager = TimeIntervalManager.shared
-    lazy var infoCollectionController = HealthInfoCollectionController(self)
     var intervalsArray = [StepsModel]()
     var todayIndexPath: IndexPath? {
         didSet {
@@ -28,6 +27,7 @@ class DashboardViewController: UIViewController {
             }
         }
     }
+    lazy var infoCollectionController = HealthInfoCollectionController(self, collectionView: self.healthInfoCollectionView)
 
     @IBOutlet weak var heartRateView: LineChartView!
     @IBOutlet weak var dayCollectionView: UICollectionView!
@@ -246,6 +246,13 @@ extension DashboardViewController: FSCalendarDataSource, FSCalendarDelegate {
 // MARK: Info CollectionView setup
 extension DashboardViewController: CollectionControllerDelegate {
     func setupInfoCollectionView() {
+//        let flowLayout = SnappingFlowLayout()
+//        flowLayout.scrollDirection = .horizontal
+//
+//        healthInfoCollectionView.collectionViewLayout = flowLayout
+        healthInfoCollectionView.isPagingEnabled = false
+        healthInfoCollectionView.decelerationRate = .fast
+        
         healthInfoCollectionView.dataSource = infoCollectionController
         healthInfoCollectionView.delegate = infoCollectionController
     }

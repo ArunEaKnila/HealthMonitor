@@ -22,31 +22,29 @@ class HealthTypeCollectionViewCell: UICollectionViewCell {
         titleLabel.text = title
         valueLabel.text = value
         unitsLabel.text = units
-        
-        setShadow()
     }
     
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//
-//        setShadow()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        super.init(coder: coder)
-//
-//        setShadow()
-//    }
-    
-    private func setShadow() {
-        if hasSet { return }
-        
-        containerView.layer.backgroundColor = UIColor.clear.cgColor
-        containerView.layer.shadowColor = UIColor.black.cgColor
-        containerView.layer.shadowOffset = CGSize(width: 0, height: 1.0)
-        containerView.layer.shadowOpacity = 0.2
-        containerView.layer.shadowRadius = 4.0
-        
-        hasSet = true
+    private var shadowLayer: CAShapeLayer!
+    private var cornerRadius: CGFloat = 25.0
+    private var fillColor: UIColor = .blue // the color applied to the shadowLayer, rather than the view's backgroundColor
+     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        if hasSet == false {
+            self.contentView.layer.cornerRadius = 10.0
+            self.contentView.layer.borderWidth = 0.3
+            self.contentView.layer.borderColor = UIColor.clear.cgColor
+            self.contentView.layer.masksToBounds = false
+
+            self.layer.shadowColor = UIColor.black.cgColor
+            self.layer.shadowOffset = CGSize(width: 0, height: 2.0)
+            self.layer.shadowRadius = 2.0
+            self.layer.shadowOpacity = 0.2
+            self.layer.masksToBounds = false
+            self.layer.shadowPath = UIBezierPath(roundedRect: self.bounds, cornerRadius: self.contentView.layer.cornerRadius).cgPath
+            
+            hasSet = true
+        }
     }
 }

@@ -5,10 +5,15 @@ enum HealthkitSetupError: Error {
     case stepCountNotSupported
     case heartRateNotSupported
     case distanceNotSupported
+    case flightNotSupported
+    case cyclingNotSupported
+    case caloriesNotSupported
 }
 
 enum ActivityType: CaseIterable {
-    case stepCount, heartRate, walkingDistance
+    case stepCount, heartRate, walkingDistance, flightsClimbed, cycling, caloriesBurned
+    
+    static let cases = [heartRate, walkingDistance, flightsClimbed, cycling, .caloriesBurned]
     
     static let supportedTypes: Set<HKObjectType> = {
         var objectSet = Set<HKObjectType>()
@@ -30,6 +35,12 @@ enum ActivityType: CaseIterable {
             return .heartRateNotSupported
         case .walkingDistance:
             return .distanceNotSupported
+        case .flightsClimbed:
+            return .flightNotSupported
+        case .cycling:
+            return .cyclingNotSupported
+        case .caloriesBurned:
+            return .caloriesNotSupported
         }
     }
     
@@ -41,39 +52,43 @@ enum ActivityType: CaseIterable {
             return HKObjectType.quantityType(forIdentifier: .heartRate)
         case .walkingDistance:
             return HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)
+        case .flightsClimbed:
+            return HKObjectType.quantityType(forIdentifier: .flightsClimbed)
+        case .cycling:
+            return HKObjectType.quantityType(forIdentifier: .distanceCycling)
+        case .caloriesBurned:
+            return HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)
         }
     }
     
     var option: HKStatisticsOptions {
         switch self {
-        case .stepCount:
+        case .stepCount, .walkingDistance, .flightsClimbed, .cycling, .caloriesBurned:
             return .cumulativeSum
         case .heartRate:
             return .discreteAverage
-        case .walkingDistance:
-            return .cumulativeSum
         }
     }
     
     var unit: HKUnit {
         switch self {
-        case .stepCount:
+        case .stepCount, .flightsClimbed:
             return HKUnit.count()
         case .heartRate:
             return HKUnit.count().unitDivided(by: HKUnit.minute())
-        case .walkingDistance:
-            return HKUnit.mile()
+        case .walkingDistance, .cycling:
+            return .mile()
+        case .caloriesBurned:
+            return .kilocalorie()
         }
     }
     
     func value(forStatistics statistics: HKStatistics?) -> Double? {
         switch self {
-        case .stepCount:
+        case .stepCount, .walkingDistance, .flightsClimbed, .cycling, .caloriesBurned:
             return statistics?.sumQuantity()?.doubleValue(for: self.unit)
         case .heartRate:
             return statistics?.averageQuantity()?.doubleValue(for: self.unit)
-        case .walkingDistance:
-            return statistics?.sumQuantity()?.doubleValue(for: self.unit)
         }
     }
     
@@ -85,6 +100,12 @@ enum ActivityType: CaseIterable {
             return "HEART RATE"
         case .walkingDistance:
             return "DISTANCE"
+        case .flightsClimbed:
+            return "FLIGHTS CLIMBED"
+        case .cycling:
+            return "CYCLING"
+        case .caloriesBurned:
+            return "CALORIES BURNED"
         }
     }
     
@@ -96,17 +117,21 @@ enum ActivityType: CaseIterable {
             return "BPM"
         case .walkingDistance:
             return "MILES"
+        case .flightsClimbed:
+            return "FLIGHTS"
+        case .cycling:
+            return "MILES"
+        case .caloriesBurned:
+            return "KCAL"
         }
     }
     
     func formatValue(_ value: Double) -> String {
         switch self {
-        case .stepCount:
+        case .stepCount, .heartRate, .flightsClimbed:
             return String(format: "%.0f", value)
-        case .heartRate:
+        case .walkingDistance, .cycling, .caloriesBurned:
             return String(format: "%.1f", value)
-        case .walkingDistance:
-            return String(format: "%.2f", value)
         }
     }
 }

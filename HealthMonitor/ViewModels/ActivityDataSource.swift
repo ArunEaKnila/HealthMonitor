@@ -20,10 +20,7 @@ class ActivityDataSource {
         ActivityType.allCases.forEach { (type) in
             group.enter()
             
-            print("Entered for loop for type \(type.titleLabel)")
-            
             HealthKitDataFetcher.shared.getData(forType: type, andDate: date, options: type.option) { (value, type) in
-                print("Fetched value for type \(type.titleLabel) value : \(type.formatValue(value))")
                 
                 DispatchQueue.main.async {
                     activityValues[type] = type.formatValue(value)

@@ -13,15 +13,17 @@ protocol CollectionControllerDelegate: UIViewController {
 }
 
 class HealthInfoCollectionController: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    private let itemsPerRow: CGFloat = 1.5
+    private let itemsPerRow: CGFloat = 1.75
     
-    init(_ controller: CollectionControllerDelegate) {
+    init(_ controller: CollectionControllerDelegate, collectionView: UICollectionView) {
         super.init()
         
         self.controller = controller
+        self.collectionView = collectionView
     }
     
     weak var controller: CollectionControllerDelegate?
+    weak var collectionView: UICollectionView?
     
     var displayDate: Date = Date() {
         didSet {
@@ -33,7 +35,7 @@ class HealthInfoCollectionController: NSObject, UICollectionViewDataSource, UICo
         }
     }
     
-    private var activityTypes = ActivityType.allCases
+    private var activityTypes = ActivityType.cases
     private var activityValues: [ActivityType: String]?
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -62,14 +64,26 @@ class HealthInfoCollectionController: NSObject, UICollectionViewDataSource, UICo
         return CGSize(width: widthPerItem, height: 110)
     }
     
-    // Remove Inter Item Spacing
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        return UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10)
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0.0
+    
+    func snapToCenter() {
+        guard let view = controller?.view, let collectionView = collectionView else { return }
+        
+        let centerPoint = view.convert(view.center, to: collectionView)
+        if let centerIndexPath = collectionView.indexPathForItem(at: centerPoint) {
+            collectionView.scrollToItem(at: centerIndexPath, at: .centeredHorizontally, animated: true)
+        }
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0.0
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        snapToCenter()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            snapToCenter()
+        }
     }
 }
