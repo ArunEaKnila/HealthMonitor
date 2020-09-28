@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="17156" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
+    <device id="watch40"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="17034"/>
+    </dependencies>
+    <scenes>
+        <!--Main Page Controller-->
+        <scene sceneID="aou-V4-d1y">
+            <objects>
+                <controller fullScreen="YES" id="AgC-eL-Hgc" customClass="MainPageController" customModule="WatchMonitor_WatchKit_App" customModuleProvider="target">
+                    <items>
+                        <group width="1" height="1" alignment="left" id="5x1-7O-O3I">
+                            <items>
+                                <group width="0.40000000000000002" height="1" alignment="left" layout="vertical" id="0hi-60-soZ">
+                                    <items>
+                                        <label alignment="center" text="9:00" textAlignment="center" id="0LS-uG-NEj">
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                        </label>
+                                        <group width="1" alignment="center" verticalAlignment="center" backgroundImage="time_overlay" layout="vertical" id="QOl-9L-UjF">
+                                            <items>
+                                                <label alignment="center" text="10:00" textAlignment="center" id="r4e-Nq-Ptf">
+                                                    <fontDescription key="font" style="UICTFontTextStyleCaption1"/>
+                                                </label>
+                                                <imageView width="1" height="50" alignment="left" image="watch_line" contentMode="scaleAspectFit" id="lXd-Da-J2m"/>
+                                                <label alignment="center" text="11:00" textAlignment="center" id="wGc-pl-phs">
+                                                    <fontDescription key="font" style="UICTFontTextStyleCaption1"/>
+                                                </label>
+                                            </items>
+                                            <edgeInsets key="margins" left="0.0" right="0.0" top="5" bottom="5"/>
+                                        </group>
+                                        <label alignment="center" verticalAlignment="bottom" text="12:00" textAlignment="center" id="MKB-xb-4kx">
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                        </label>
+                                    </items>
+                                    <gestureRecognizers>
+                                        <swipeGestureRecognizer direction="4" id="Xll-ft-3eK" userLabel="Up Swipe">
+                                            <connections>
+                                                <action selector="swipeUpAction:" destination="AgC-eL-Hgc" id="XuF-yU-JWu"/>
+                                            </connections>
+                                        </swipeGestureRecognizer>
+                                        <swipeGestureRecognizer direction="8" id="oOR-nf-GAl" userLabel="Down Swipe">
+                                            <connections>
+                                                <action selector="swipeDownAction:" destination="AgC-eL-Hgc" id="VsW-Cd-sph"/>
+                                            </connections>
+                                        </swipeGestureRecognizer>
+                                    </gestureRecognizers>
+                                    <edgeInsets key="margins" left="5" right="0.0" top="9.5" bottom="9.5"/>
+                                </group>
+                                <group width="0.59999999999999998" height="1" alignment="left" layout="vertical" spacing="9.5" id="APW-Af-dHq">
+                                    <items>
+                                        <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="c9K-gV-Xic">
+                                            <items>
+                                                <label alignment="center" text="241" textAlignment="center" id="hrv-wu-0Yc">
+                                                    <color key="textColor" red="0.85662925239999999" green="0.23012366889999999" blue="0.14924871919999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
+                                                </label>
+                                                <group width="1" alignment="left" id="FjL-Oy-xYc">
+                                                    <items>
+                                                        <imageView width="15" height="1" alignment="center" image="steps_icon" id="XZ1-d9-Sqq">
+                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </imageView>
+                                                        <label alignment="center" verticalAlignment="bottom" text="STEPS" textAlignment="center" id="sZ5-oi-TOY">
+                                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                        </label>
+                                                    </items>
+                                                </group>
+                                            </items>
+                                        </group>
+                                        <group width="1" alignment="left" verticalAlignment="bottom" id="ZIF-7Q-aYF">
+                                            <items>
+                                                <group width="0.5" alignment="left" layout="vertical" id="Sr0-0f-Pkf">
+                                                    <items>
+                                                        <imageView width="0.5" height="25" alignment="center" image="cardiogram" contentMode="scaleAspectFit" id="KYe-oB-90J">
+                                                            <color key="tintColor" red="0.85662925239999999" green="0.23012366889999999" blue="0.14924871919999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </imageView>
+                                                        <label alignment="center" text="72" textAlignment="center" numberOfLines="2" id="Ot6-fo-QqM">
+                                                            <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                                        </label>
+                                                    </items>
+                                                </group>
+                                                <group width="0.5" alignment="center" layout="vertical" id="aKN-NH-vd1">
+                                                    <items>
+                                                        <imageView width="0.5" height="25" alignment="center" image="distance" contentMode="scaleAspectFit" id="aXg-z4-0f8">
+                                                            <color key="tintColor" red="0.85662925239999999" green="0.23012366889999999" blue="0.14924871919999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </imageView>
+                                                        <label alignment="center" text="0.8 mil" textAlignment="center" numberOfLines="0" id="U8v-kf-gik">
+                                                            <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                                        </label>
+                                                    </items>
+                                                </group>
+                                            </items>
+                                            <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="9.5"/>
+                                        </group>
+                                    </items>
+                                    <edgeInsets key="margins" left="0.0" right="2" top="0.0" bottom="0.0"/>
+                                </group>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="currentEndTimeLabel" destination="wGc-pl-phs" id="tsv-Z9-Ygi"/>
+                        <outlet property="currentStartTimeLabel" destination="r4e-Nq-Ptf" id="wAW-XA-nGC"/>
+                        <outlet property="distanceLabel" destination="U8v-kf-gik" id="yun-Yk-eXT"/>
+                        <outlet property="heartRateLabel" destination="Ot6-fo-QqM" id="fgY-TJ-6sG"/>
+                        <outlet property="nextTimeLabel" destination="MKB-xb-4kx" id="mYZ-IV-xLQ"/>
+                        <outlet property="previousTimeLabel" destination="0LS-uG-NEj" id="IEK-G8-iRh"/>
+                        <outlet property="stepsLabel" destination="hrv-wu-0Yc" id="qhe-lT-f9m"/>
+                        <outlet property="watchLinesImage" destination="lXd-Da-J2m" id="FZq-Yf-Toa"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="220" y="91"/>
+        </scene>
+        <!--Static Notification Interface Controller-->
+        <scene sceneID="AEw-b0-oYE">
+            <objects>
+                <notificationController id="YCC-NB-fut">
+                    <items>
+                        <label alignment="left" text="Alert Label" numberOfLines="0" id="IdU-wH-bcW"/>
+                    </items>
+                    <notificationCategory key="notificationCategory" identifier="myCategory" id="JfB-70-Muf"/>
+                    <connections>
+                        <outlet property="notificationAlertLabel" destination="IdU-wH-bcW" id="JKC-fr-R95"/>
+                        <segue destination="4sK-HA-Art" kind="relationship" relationship="dynamicNotificationInterface" id="kXh-Jw-8B1"/>
+                        <segue destination="eXb-UN-Cd0" kind="relationship" relationship="dynamicInteractiveNotificationInterface" id="mpB-YA-K8N"/>
+                    </connections>
+                </notificationController>
+            </objects>
+            <point key="canvasLocation" x="220" y="643"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="ZPc-GJ-vnh">
+            <objects>
+                <controller id="4sK-HA-Art" customClass="NotificationController" customModule="WatchMonitor_WatchKit_App" customModuleProvider="target"/>
+            </objects>
+            <point key="canvasLocation" x="468" y="643"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="Niz-AI-uX2">
+            <objects>
+                <controller id="eXb-UN-Cd0" customClass="NotificationController" customModule="WatchMonitor_WatchKit_App" customModuleProvider="target"/>
+            </objects>
+            <point key="canvasLocation" x="468" y="345"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="cardiogram" width="64" height="64"/>
+        <image name="distance" width="64" height="64"/>
+        <image name="steps_icon" width="80" height="80"/>
+        <image name="time_overlay" width="157.5" height="250"/>
+        <image name="watch_line" width="178" height="250"/>
+    </resources>
+</document>

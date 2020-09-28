@@ -8,7 +8,6 @@
 
 import Foundation
 import HealthKit
-import BackgroundTasks
 import UserNotifications
 
 class HealthKitDataFetcher {
@@ -163,4 +162,16 @@ class HealthKitDataFetcher {
         
         hkStore.execute(query)
     }
+}
+
+class StepsModel {
+    internal init(intervalStartTime: String? = nil, stepsCount: Int? = nil, heartRate: Int? = nil) {
+        self.intervalStartTime = intervalStartTime
+        self.stepsCount = stepsCount
+        self.heartRate = heartRate
+    }
+    
+    var intervalStartTime: String?
+    var stepsCount: Int?
+    var heartRate: Int?
 }

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "18F33B9D251B7D290049B01A"
+               BlueprintIdentifier = "1840E14325219FAC00594F13"
                BuildableName = "WatchMonitor WatchKit App.app"
                BlueprintName = "WatchMonitor WatchKit App"
                ReferencedContainer = "container:HealthMonitor.xcodeproj">
@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "18F33B9A251B7D290049B01A"
+               BlueprintIdentifier = "1840E14025219FAC00594F13"
                BuildableName = "WatchMonitor.app"
                BlueprintName = "WatchMonitor"
                ReferencedContainer = "container:HealthMonitor.xcodeproj">
@@ -59,7 +59,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "18F33B9D251B7D290049B01A"
+            BlueprintIdentifier = "1840E14325219FAC00594F13"
             BuildableName = "WatchMonitor WatchKit App.app"
             BlueprintName = "WatchMonitor WatchKit App"
             ReferencedContainer = "container:HealthMonitor.xcodeproj">
@@ -77,7 +77,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "18F33B9D251B7D290049B01A"
+            BlueprintIdentifier = "1840E14325219FAC00594F13"
             BuildableName = "WatchMonitor WatchKit App.app"
             BlueprintName = "WatchMonitor WatchKit App"
             ReferencedContainer = "container:HealthMonitor.xcodeproj">

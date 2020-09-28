@@ -7,17 +7,12 @@
 //
 
 import UIKit
-import HealthKit
 import UserNotifications
 import Charts
 import FSCalendar
 
 class DashboardViewController: UIViewController {
     
-    let stepsType = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)!
-    let hkStore = HKHealthStore()
-    var stepsObserverQuery: HKObserverQuery?
-    let kUserDefaultsAnchorKey = "kUserDefaultsAnchorKey"
     let timeManager = TimeIntervalManager.shared
     var intervalsArray = [StepsModel]()
     var todayIndexPath: IndexPath? {
@@ -99,19 +94,6 @@ extension DashboardViewController {
         }
         
         infoCollectionController.displayDate = self.calendarView.selectedDate ?? Date()
-    }
-    
-    private func averageHeartRate() -> Int {
-        var numberOfRates = 0
-        var totalRate = 0
-        for stepsModel in intervalsArray {
-            if let heartRate = stepsModel.heartRate, heartRate > 0 {
-                totalRate += heartRate
-                numberOfRates += 1
-            }
-        }
-        
-        return numberOfRates > 0 ? totalRate / numberOfRates : 0
     }
 }
 
@@ -260,16 +242,4 @@ extension DashboardViewController: CollectionControllerDelegate {
     func reloadData() {
         healthInfoCollectionView.reloadData()
     }
-}
-
-class StepsModel {
-    internal init(intervalStartTime: String? = nil, stepsCount: Int? = nil, heartRate: Int? = nil) {
-        self.intervalStartTime = intervalStartTime
-        self.stepsCount = stepsCount
-        self.heartRate = heartRate
-    }
-    
-    var intervalStartTime: String?
-    var stepsCount: Int?
-    var heartRate: Int?
 }
