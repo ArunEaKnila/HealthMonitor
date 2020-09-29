@@ -126,6 +126,23 @@ enum ActivityType: CaseIterable {
         }
     }
     
+    var imageName: String {
+        switch self {
+        case .stepCount:
+            return "steps_icon"
+        case .heartRate:
+            return "cardiogram"
+        case .walkingDistance:
+            return "distance"
+        case .flightsClimbed:
+            return "flights"
+        case .cycling:
+            return "cycling"
+        case .caloriesBurned:
+            return "calories"
+        }
+    }
+    
     func formatValue(_ value: Double) -> String {
         switch self {
         case .stepCount, .heartRate, .flightsClimbed:

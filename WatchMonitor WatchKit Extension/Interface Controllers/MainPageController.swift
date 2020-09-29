@@ -25,6 +25,7 @@ class MainPageController: WKInterfaceController {
     var intervalsArray = [StepsModel]()
     var currentTimeIndex: Int?
     var displayTimeIndex: Int?
+    var activityValues: [ActivityType: String]?
     
     override func awake(withContext context: Any?) {
         let allIntervals = timeManager.getTimeIntervals()
@@ -54,6 +55,10 @@ class MainPageController: WKInterfaceController {
                 self?.refreshHealthKitData()
             }
         }
+    }
+    
+    @IBAction func goToNextScreenAction() {
+        presentController(withName: "HealthList", context: self.activityValues)
     }
     
     @IBAction func swipeUpAction(_ sender: Any) {
@@ -160,6 +165,7 @@ extension MainPageController {
             }
             
             self?.distanceLabel.setText("\(activityValues[.walkingDistance] ?? "0") mil")
+            self?.activityValues = activityValues
         }
     }
 }

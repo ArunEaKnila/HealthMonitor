@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="17034"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
     </dependencies>
     <scenes>
         <!--Main Page Controller-->
@@ -50,54 +51,63 @@
                                     </gestureRecognizers>
                                     <edgeInsets key="margins" left="5" right="0.0" top="9.5" bottom="9.5"/>
                                 </group>
-                                <group width="0.59999999999999998" height="1" alignment="left" layout="vertical" spacing="9.5" id="APW-Af-dHq">
+                                <group width="0.59999999999999998" height="1" alignment="left" layout="overlap" id="4CN-cw-L0s">
                                     <items>
-                                        <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="c9K-gV-Xic">
+                                        <group width="1" height="1" alignment="left" layout="vertical" spacing="9.5" id="APW-Af-dHq">
                                             <items>
-                                                <label alignment="center" text="241" textAlignment="center" id="hrv-wu-0Yc">
-                                                    <color key="textColor" red="0.85662925239999999" green="0.23012366889999999" blue="0.14924871919999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
-                                                </label>
-                                                <group width="1" alignment="left" id="FjL-Oy-xYc">
+                                                <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="c9K-gV-Xic">
                                                     <items>
-                                                        <imageView width="15" height="1" alignment="center" image="steps_icon" id="XZ1-d9-Sqq">
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </imageView>
-                                                        <label alignment="center" verticalAlignment="bottom" text="STEPS" textAlignment="center" id="sZ5-oi-TOY">
-                                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                        <label alignment="center" text="241" textAlignment="center" id="hrv-wu-0Yc">
+                                                            <color key="textColor" name="WatchThemeColor"/>
+                                                            <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
                                                         </label>
+                                                        <group width="1" alignment="left" id="FjL-Oy-xYc">
+                                                            <items>
+                                                                <imageView width="15" height="1" alignment="center" image="steps_icon" id="XZ1-d9-Sqq">
+                                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </imageView>
+                                                                <label alignment="center" verticalAlignment="bottom" text="STEPS" textAlignment="center" id="sZ5-oi-TOY">
+                                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                                </label>
+                                                            </items>
+                                                        </group>
                                                     </items>
+                                                </group>
+                                                <group width="1" alignment="left" verticalAlignment="bottom" id="ZIF-7Q-aYF">
+                                                    <items>
+                                                        <group width="0.5" alignment="left" layout="vertical" id="Sr0-0f-Pkf">
+                                                            <items>
+                                                                <imageView width="0.5" height="25" alignment="center" image="cardiogram" contentMode="scaleAspectFit" id="KYe-oB-90J">
+                                                                    <color key="tintColor" name="WatchThemeColor"/>
+                                                                </imageView>
+                                                                <label alignment="center" text="72" textAlignment="center" numberOfLines="2" id="Ot6-fo-QqM">
+                                                                    <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                                                </label>
+                                                            </items>
+                                                        </group>
+                                                        <group width="0.5" alignment="center" layout="vertical" id="aKN-NH-vd1">
+                                                            <items>
+                                                                <imageView width="0.5" height="25" alignment="center" image="distance" contentMode="scaleAspectFit" id="aXg-z4-0f8">
+                                                                    <color key="tintColor" name="WatchThemeColor"/>
+                                                                </imageView>
+                                                                <label alignment="center" text="0.8 mil" textAlignment="center" numberOfLines="0" id="U8v-kf-gik">
+                                                                    <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                                                </label>
+                                                            </items>
+                                                        </group>
+                                                    </items>
+                                                    <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="9.5"/>
                                                 </group>
                                             </items>
+                                            <edgeInsets key="margins" left="0.0" right="2" top="0.0" bottom="0.0"/>
                                         </group>
-                                        <group width="1" alignment="left" verticalAlignment="bottom" id="ZIF-7Q-aYF">
-                                            <items>
-                                                <group width="0.5" alignment="left" layout="vertical" id="Sr0-0f-Pkf">
-                                                    <items>
-                                                        <imageView width="0.5" height="25" alignment="center" image="cardiogram" contentMode="scaleAspectFit" id="KYe-oB-90J">
-                                                            <color key="tintColor" red="0.85662925239999999" green="0.23012366889999999" blue="0.14924871919999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        </imageView>
-                                                        <label alignment="center" text="72" textAlignment="center" numberOfLines="2" id="Ot6-fo-QqM">
-                                                            <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
-                                                        </label>
-                                                    </items>
-                                                </group>
-                                                <group width="0.5" alignment="center" layout="vertical" id="aKN-NH-vd1">
-                                                    <items>
-                                                        <imageView width="0.5" height="25" alignment="center" image="distance" contentMode="scaleAspectFit" id="aXg-z4-0f8">
-                                                            <color key="tintColor" red="0.85662925239999999" green="0.23012366889999999" blue="0.14924871919999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        </imageView>
-                                                        <label alignment="center" text="0.8 mil" textAlignment="center" numberOfLines="0" id="U8v-kf-gik">
-                                                            <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
-                                                        </label>
-                                                    </items>
-                                                </group>
-                                            </items>
-                                            <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="9.5"/>
-                                        </group>
+                                        <button width="1" height="1" alignment="left" alpha="0.10000000000000001" id="LKV-eW-D5p">
+                                            <connections>
+                                                <action selector="goToNextScreenAction" destination="AgC-eL-Hgc" id="4w7-iL-GxL"/>
+                                            </connections>
+                                        </button>
                                     </items>
-                                    <edgeInsets key="margins" left="0.0" right="2" top="0.0" bottom="0.0"/>
                                 </group>
                             </items>
                         </group>
@@ -114,7 +124,53 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="220" y="91"/>
+            <point key="canvasLocation" x="220" y="89"/>
+        </scene>
+        <!--HealthList-->
+        <scene sceneID="Ox0-t9-RHI">
+            <objects>
+                <controller identifier="HealthList" id="adz-qK-h5k" customClass="HealthListController" customModule="WatchMonitor_WatchKit_Extension">
+                    <items>
+                        <table alignment="left" id="bvI-Ex-4MI">
+                            <items>
+                                <tableRow identifier="healthInfo" selectable="NO" id="U9V-on-Rrm" customClass="HealthInfoRowController" customModule="WatchMonitor_WatchKit_Extension">
+                                    <group key="rootItem" width="1" alignment="left" spacing="5" id="vp7-Ci-rou">
+                                        <items>
+                                            <group width="3" height="1" alignment="left" id="TBY-KP-1tG">
+                                                <color key="backgroundColor" name="WatchThemeColor"/>
+                                            </group>
+                                            <group alignment="left" layout="vertical" id="1U5-bD-iY4">
+                                                <items>
+                                                    <label alignment="left" verticalAlignment="center" text="HEART RATE" textAlignment="left" id="vdN-CO-Lih">
+                                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                    </label>
+                                                    <label alignment="left" verticalAlignment="center" text="72" textAlignment="right" id="5dd-1R-q8M">
+                                                        <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                                                    </label>
+                                                </items>
+                                            </group>
+                                            <imageView width="25" height="1" alignment="right" image="cardiogram" contentMode="scaleAspectFit" id="SEB-ES-S9P">
+                                                <color key="tintColor" name="WatchThemeColor"/>
+                                            </imageView>
+                                        </items>
+                                        <edgeInsets key="margins" left="9.5" right="9.5" top="0.0" bottom="0.0"/>
+                                    </group>
+                                    <connections>
+                                        <outlet property="healthInfoLabel" destination="vdN-CO-Lih" id="hOr-BI-KgB"/>
+                                        <outlet property="sideImageView" destination="SEB-ES-S9P" id="A2b-C9-eeH"/>
+                                        <outlet property="valueLabel" destination="5dd-1R-q8M" id="Jo5-op-acd"/>
+                                    </connections>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                    <connections>
+                        <outlet property="healthInfoTable" destination="bvI-Ex-4MI" id="Yk9-WN-U4A"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="419" y="88"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">
@@ -154,5 +210,8 @@
         <image name="steps_icon" width="80" height="80"/>
         <image name="time_overlay" width="157.5" height="250"/>
         <image name="watch_line" width="178" height="250"/>
+        <namedColor name="WatchThemeColor">
+            <color red="0.85490196078431369" green="0.24313725490196078" blue="0.16078431372549021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

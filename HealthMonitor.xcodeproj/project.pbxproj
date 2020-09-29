@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		180A6D5D2522F550003BB3B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1840E14C25219FAF00594F13 /* Assets.xcassets */; };
 		1811C1B7250A1AD600DBF42E /* TimeIntervalCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1811C1B6250A1AD600DBF42E /* TimeIntervalCollectionCell.swift */; };
 		1811C1BA250A1B3600DBF42E /* StepIntervalCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1811C1B9250A1B3600DBF42E /* StepIntervalCollectionCell.swift */; };
 		183F21FE2521CB95006F1B80 /* HealthKitSetupAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C1E94250107A10007B49E /* HealthKitSetupAssistant.swift */; };
@@ -16,6 +17,8 @@
 		183F22122521CBCE006F1B80 /* ActivityDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F05256251DAF7F0052CB76 /* ActivityDataSource.swift */; };
 		183F22202521CD0C006F1B80 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F33B28251B27730049B01A /* NotificationHelper.swift */; };
 		183F22272521D231006F1B80 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 183F22262521D231006F1B80 /* HealthKit.framework */; };
+		183F222D25221A25006F1B80 /* HealthListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183F222C25221A25006F1B80 /* HealthListController.swift */; };
+		183F22392522EA75006F1B80 /* HealthInfoRowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183F22382522EA75006F1B80 /* HealthInfoRowController.swift */; };
 		1840E14525219FAC00594F13 /* WatchMonitor WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1840E14425219FAC00594F13 /* WatchMonitor WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1840E14B25219FAC00594F13 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1840E14925219FAC00594F13 /* Interface.storyboard */; };
 		1840E14D25219FAF00594F13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1840E14C25219FAF00594F13 /* Assets.xcassets */; };
@@ -91,6 +94,8 @@
 		1811C1B9250A1B3600DBF42E /* StepIntervalCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepIntervalCollectionCell.swift; sourceTree = "<group>"; };
 		183F22252521D231006F1B80 /* WatchMonitor WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "WatchMonitor WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		183F22262521D231006F1B80 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS7.0.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
+		183F222C25221A25006F1B80 /* HealthListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthListController.swift; sourceTree = "<group>"; };
+		183F22382522EA75006F1B80 /* HealthInfoRowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthInfoRowController.swift; sourceTree = "<group>"; };
 		1840E14125219FAC00594F13 /* WatchMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1840E14425219FAC00594F13 /* WatchMonitor WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchMonitor WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1840E14A25219FAC00594F13 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
@@ -159,6 +164,23 @@
 			path = CollectionViewCells;
 			sourceTree = "<group>";
 		};
+		183F22362522EA45006F1B80 /* Row Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				183F22382522EA75006F1B80 /* HealthInfoRowController.swift */,
+			);
+			path = "Row Controllers";
+			sourceTree = "<group>";
+		};
+		183F22372522EA4E006F1B80 /* Interface Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1840E15825219FB000594F13 /* MainPageController.swift */,
+				183F222C25221A25006F1B80 /* HealthListController.swift */,
+			);
+			path = "Interface Controllers";
+			sourceTree = "<group>";
+		};
 		1840E14825219FAC00594F13 /* WatchMonitor WatchKit App */ = {
 			isa = PBXGroup;
 			children = (
@@ -172,8 +194,9 @@
 		1840E15725219FB000594F13 /* WatchMonitor WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				183F22372522EA4E006F1B80 /* Interface Controllers */,
+				183F22362522EA45006F1B80 /* Row Controllers */,
 				183F22252521D231006F1B80 /* WatchMonitor WatchKit Extension.entitlements */,
-				1840E15825219FB000594F13 /* MainPageController.swift */,
 				1840E15A25219FB000594F13 /* ExtensionDelegate.swift */,
 				1840E15C25219FB000594F13 /* NotificationController.swift */,
 				1840E15E25219FB000594F13 /* ComplicationController.swift */,
@@ -429,6 +452,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				180A6D5D2522F550003BB3B4 /* Assets.xcassets in Resources */,
 				1840E16125219FB200594F13 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -496,7 +520,9 @@
 				1840E15F25219FB000594F13 /* ComplicationController.swift in Sources */,
 				183F22122521CBCE006F1B80 /* ActivityDataSource.swift in Sources */,
 				1840E15B25219FB000594F13 /* ExtensionDelegate.swift in Sources */,
+				183F222D25221A25006F1B80 /* HealthListController.swift in Sources */,
 				1840E15925219FB000594F13 /* MainPageController.swift in Sources */,
+				183F22392522EA75006F1B80 /* HealthInfoRowController.swift in Sources */,
 				183F21FE2521CB95006F1B80 /* HealthKitSetupAssistant.swift in Sources */,
 				183F22202521CD0C006F1B80 /* NotificationHelper.swift in Sources */,
 				183F22032521CBAD006F1B80 /* TimeIntervalManager.swift in Sources */,

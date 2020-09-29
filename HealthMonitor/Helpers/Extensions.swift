@@ -14,3 +14,9 @@ extension Collection {
         return indices.contains(index) ? self[index] : nil
     }
 }
+
+extension Dictionary {
+    subscript(i: Int) -> (key: Key, value: Value) {
+        return self[index(startIndex, offsetBy: i)]
+    }
+}
